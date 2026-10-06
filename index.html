@@ -1729,6 +1729,25 @@ footer{
                 type="text">
         </div>
 
+        <div class="form-group">
+            <label>Imagem de fundo da página inicial</label>
+
+            <input
+                id="editHeroImageFile"
+                type="file"
+                accept="image/*"
+                onchange="previewHeroImage(event)">
+
+            <small style="display:block;margin-top:8px;color:#66736d;">
+                Escolhe uma imagem do computador ou telemóvel. A nova imagem será guardada online no Supabase.
+            </small>
+
+            <div
+                id="heroImagePreview"
+                style="margin-top:14px;border-radius:14px;overflow:hidden;background:#eef3ef;min-height:180px;display:flex;align-items:center;justify-content:center;">
+            </div>
+        </div>
+
         <button
             class="btn btn-primary"
             onclick="saveHome()">
@@ -2377,7 +2396,8 @@ const defaultData = {
     home:{
         title:"Viaje. Descubra. Viva.",
         text:"Viajar ficou mais simples. Descubra Angola através das experiências da Binzole Viajar Verde.",
-        button:"Ver viagens"
+        button:"Ver viagens",
+        backgroundImage:"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=85"
     },
 
     about:{
@@ -2517,6 +2537,7 @@ function normalizeData(){
     data.home.title = data.home.title || defaultData.home.title;
     data.home.text = data.home.text || defaultData.home.text;
     data.home.button = data.home.button || defaultData.home.button;
+    data.home.backgroundImage = data.home.backgroundImage || defaultData.home.backgroundImage;
 
     if(typeof data.home.text === "string")
         data.home.text = data.home.text.replaceAll(oldName,newName);
@@ -3019,6 +3040,23 @@ function renderPublic(){
 
     if(heroButton)
         heroButton.textContent = data.home.button;
+
+    const hero =
+        document.getElementById("inicio");
+
+    if(hero){
+        const heroImage =
+            data.home.backgroundImage ||
+            defaultData.home.backgroundImage;
+
+        hero.style.backgroundImage =
+            "linear-gradient(90deg,rgba(0,35,20,.82),rgba(0,35,20,.35)),url(\""+
+            heroImage.replace(/\"/g,"\\\"")+
+            "\")";
+        hero.style.backgroundPosition = "center";
+        hero.style.backgroundSize = "cover";
+        hero.style.backgroundRepeat = "no-repeat";
+    }
 
     const aboutTitle =
         document.getElementById("aboutTitle");
@@ -3813,6 +3851,41 @@ function loadHomeForm(){
 
     if(button)
         button.value=data.home.button;
+
+    const file =
+        document.getElementById("editHeroImageFile");
+
+    if(file)
+        file.value="";
+
+    const preview =
+        document.getElementById("heroImagePreview");
+
+    if(preview){
+        preview.innerHTML = data.home.backgroundImage
+            ? `<img src="${esc(data.home.backgroundImage)}" alt="Imagem de fundo atual" style="width:100%;height:220px;object-fit:cover;display:block;">`
+            : `<span style="padding:30px;color:#66736d;">Nenhuma imagem definida.</span>`;
+    }
+}
+
+function previewHeroImage(event){
+
+    const file = event?.target?.files?.[0];
+    const preview = document.getElementById("heroImagePreview");
+
+    if(!file || !preview)
+        return;
+
+    if(!file.type.startsWith("image/")){
+        alert("Seleciona um ficheiro de imagem válido.");
+        event.target.value="";
+        return;
+    }
+
+    const url = URL.createObjectURL(file);
+
+    preview.innerHTML =
+        `<img src="${url}" alt="Nova imagem de fundo" style="width:100%;height:220px;object-fit:cover;display:block;">`;
 }
 
 async function saveHome(){
@@ -3826,11 +3899,46 @@ async function saveHome(){
     data.home.button =
         document.getElementById("editHeroButton").value.trim();
 
+    const imageInput =
+        document.getElementById("editHeroImageFile");
+
+    const imageFile =
+        imageInput?.files?.[0];
+
+    if(imageFile){
+
+        if(!ONLINE_MODE || !sb){
+            alert("Para alterar a imagem, o site precisa estar ligado ao Supabase.");
+            return;
+        }
+
+        try{
+
+            const imageUrl =
+                await uploadToStorage(imageFile,"hero");
+
+            if(!imageUrl)
+                throw new Error("Não foi possível obter o endereço da imagem.");
+
+            data.home.backgroundImage = imageUrl;
+
+        }catch(error){
+
+            console.error(error);
+            alert("Não foi possível enviar a imagem. Verifica o armazenamento do Supabase e tenta novamente.");
+            return;
+        }
+    }
+
     const saved =
         await saveData();
 
-    if(saved)
+    if(saved){
+        if(imageInput)
+            imageInput.value="";
+
         alert("Página inicial atualizada e sincronizada online.");
+    }
 }
 
 /* ==========================================================
