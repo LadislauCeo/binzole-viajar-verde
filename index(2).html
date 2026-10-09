@@ -1,0 +1,5480 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Binzole Viajar Verde</title>
+
+<meta name="description" content="Binzole Viajar Verde — viagens, turismo e experiências em Angola.">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+    --green:#087443;
+    --green-dark:#04532f;
+    --green-light:#eaf7f0;
+    --gold:#d9a441;
+    --white:#fff;
+    --dark:#10251b;
+    --gray:#66736d;
+    --light:#f5f8f6;
+    --danger:#d93025;
+    --success:#198754;
+    --shadow:0 12px 35px rgba(0,0,0,.10);
+    --radius:18px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    color:var(--dark);
+    background:#fff;
+    line-height:1.6;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+img{
+    max-width:100%;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:rgba(255,255,255,.97);
+    backdrop-filter:blur(12px);
+    box-shadow:0 3px 20px rgba(0,0,0,.07);
+}
+
+.navbar{
+    max-width:1200px;
+    margin:auto;
+    min-height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    padding:12px 20px;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:900;
+    color:var(--green);
+    white-space:nowrap;
+}
+
+.logo span{
+    color:var(--dark);
+}
+
+#mainNav{
+    display:flex;
+    align-items:center;
+    gap:24px;
+}
+
+#mainNav a{
+    font-weight:700;
+    font-size:14px;
+    transition:.2s;
+}
+
+#mainNav a:hover{
+    color:var(--green);
+}
+
+.nav-admin{
+    background:var(--green);
+    color:white!important;
+    padding:10px 15px;
+    border-radius:10px;
+}
+
+.menu-toggle{
+    display:none;
+    border:0;
+    background:transparent;
+    font-size:28px;
+    color:var(--green);
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:650px;
+    display:flex;
+    align-items:center;
+    position:relative;
+    background:
+        linear-gradient(90deg,rgba(0,35,20,.82),rgba(0,35,20,.35)),
+        url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=85")
+        center/cover;
+    color:white;
+}
+
+.hero-content{
+    width:min(1200px,100%);
+    margin:auto;
+    padding:80px 20px;
+}
+
+.hero-content-inner{
+    max-width:720px;
+}
+
+.hero-badge{
+    display:inline-block;
+    padding:8px 15px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:50px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.hero h1{
+    font-size:clamp(42px,7vw,76px);
+    line-height:1.03;
+    margin-bottom:22px;
+}
+
+.hero p{
+    font-size:20px;
+    max-width:650px;
+    color:#eef7f2;
+    margin-bottom:32px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    border:0;
+    border-radius:11px;
+    padding:11px 17px;
+    font-weight:800;
+    transition:.2s;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:var(--green);
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--green-dark);
+}
+
+.btn-secondary{
+    background:#e9f1ed;
+    color:var(--green-dark);
+}
+
+.btn-success{
+    background:var(--success);
+    color:white;
+}
+
+.btn-danger{
+    background:var(--danger);
+    color:white;
+}
+
+.btn-light{
+    background:white;
+    color:var(--green);
+}
+
+.btn-large{
+    padding:15px 23px;
+    font-size:16px;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section{
+    padding:85px 20px;
+}
+
+.section-container{
+    width:min(1200px,100%);
+    margin:auto;
+}
+
+.section-heading{
+    text-align:center;
+    margin-bottom:48px;
+}
+
+.section-heading span{
+    display:block;
+    color:var(--green);
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.section-heading h2{
+    font-size:clamp(30px,5vw,46px);
+    margin-bottom:10px;
+}
+
+.section-heading p{
+    color:var(--gray);
+    max-width:700px;
+    margin:auto;
+}
+
+/* =========================================================
+   TRIPS
+========================================================= */
+
+.trips-section{
+    background:var(--light);
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.card{
+    background:white;
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:.25s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.card-img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    background:#e8eee9;
+}
+
+.card-body{
+    padding:24px;
+}
+
+.card h3{
+    font-size:22px;
+    margin-bottom:15px;
+}
+
+.card p{
+    color:var(--gray);
+    margin:12px 0 18px;
+}
+
+.meta{
+    display:grid;
+    gap:6px;
+    color:#52625a;
+    font-size:14px;
+}
+
+.price{
+    color:var(--green);
+    font-size:24px;
+    font-weight:900;
+    margin:18px 0;
+}
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about{
+    background-position:center;
+    background-size:cover;
+    background-attachment:fixed;
+    color:white;
+    position:relative;
+}
+
+.about .section-heading{
+    text-align:left;
+}
+
+.about .section-heading h2{
+    color:white;
+}
+
+.about-content{
+    max-width:1000px;
+    margin:auto;
+}
+
+.about-text{
+    font-size:18px;
+    max-width:900px;
+    margin-bottom:35px;
+}
+
+.about-boxes{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.about-box{
+    padding:25px;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:16px;
+    backdrop-filter:blur(10px);
+}
+
+.about-box h3{
+    margin-bottom:10px;
+}
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+.gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.gallery-grid img{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+    border-radius:15px;
+    transition:.25s;
+}
+
+.gallery-grid img:hover{
+    transform:scale(1.025);
+}
+
+/* =========================================================
+   VIDEOS
+========================================================= */
+
+.videos-section{
+    background:var(--light);
+}
+
+.video-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.video-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.video-card video{
+    width:100%;
+    display:block;
+    max-height:400px;
+    background:#000;
+}
+
+.video-info{
+    padding:20px;
+}
+
+.video-info p{
+    color:var(--gray);
+}
+
+/* =========================================================
+   OFFERS
+========================================================= */
+
+.offers-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.offer{
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    color:white;
+    padding:28px;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+}
+
+.offer h3{
+    margin-bottom:10px;
+}
+
+/* =========================================================
+   TESTIMONIALS
+========================================================= */
+
+.testimonials-section{
+    background:var(--light);
+}
+
+.testimonials-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.testimonial{
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+}
+
+.stars{
+    color:#e2a629;
+    letter-spacing:2px;
+    margin-bottom:12px;
+}
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact-section{
+    background:#10251b;
+    color:white;
+}
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.contact-item{
+    padding:22px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:16px;
+    background:rgba(255,255,255,.06);
+}
+
+.contact-item small{
+    display:block;
+    color:#9bc0ad;
+    margin-bottom:7px;
+}
+
+.contact-item strong{
+    word-break:break-word;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    background:#07150e;
+    color:#aebdb5;
+    text-align:center;
+    padding:25px 20px;
+}
+
+/* =========================================================
+   WHATSAPP
+========================================================= */
+
+.whatsapp{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:#25d366;
+    color:white;
+    display:grid;
+    place-items:center;
+    font-size:28px;
+    box-shadow:0 8px 25px rgba(0,0,0,.25);
+    z-index:1500;
+}
+
+/* =========================================================
+   MODAIS
+========================================================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.68);
+    z-index:3000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:min(650px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    position:relative;
+    box-shadow:0 25px 70px rgba(0,0,0,.3);
+}
+
+.modal-close{
+    position:absolute;
+    right:15px;
+    top:12px;
+    border:0;
+    background:#f0f3f1;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    font-size:21px;
+}
+
+.modal-box h2{
+    margin-bottom:20px;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    display:block;
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+    width:100%;
+    border:1px solid #d6dfda;
+    border-radius:10px;
+    padding:12px 13px;
+    outline:none;
+    background:white;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(8,116,67,.08);
+}
+
+.form-group textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.calculation{
+    background:var(--green-light);
+    border-radius:15px;
+    padding:18px;
+    margin:18px 0;
+}
+
+.calc-row{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    padding:5px 0;
+}
+
+.calc-row strong{
+    color:var(--green-dark);
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginScreen{
+    z-index:5000;
+}
+
+.login-box{
+    max-width:430px;
+}
+
+.login-logo{
+    text-align:center;
+    color:var(--green);
+    font-size:29px;
+    font-weight:900;
+    margin-bottom:7px;
+}
+
+.login-subtitle{
+    text-align:center;
+    color:var(--gray);
+    margin-bottom:25px;
+}
+
+/* =========================================================
+   ADMIN
+========================================================= */
+
+#adminPanel{
+    position:fixed;
+    inset:0;
+    z-index:4000;
+    display:none;
+    background:#f4f7f5;
+}
+
+#adminPanel.active{
+    display:flex;
+}
+
+.admin-sidebar{
+    width:260px;
+    background:#092d1c;
+    color:white;
+    padding:20px 14px;
+    overflow:auto;
+    flex-shrink:0;
+}
+
+.admin-brand{
+    font-size:22px;
+    font-weight:900;
+    padding:12px;
+    margin-bottom:15px;
+}
+
+.admin-brand span{
+    color:#8fd3ad;
+}
+
+.admin-menu button{
+    width:100%;
+    text-align:left;
+    border:0;
+    background:transparent;
+    color:#d9ebe1;
+    padding:12px 13px;
+    border-radius:9px;
+    margin-bottom:3px;
+    font-weight:700;
+}
+
+.admin-menu button:hover{
+    background:rgba(255,255,255,.1);
+    color:white;
+}
+
+.admin-main{
+    flex:1;
+    overflow:auto;
+    min-width:0;
+}
+
+.admin-topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:white;
+    border-bottom:1px solid #dfe7e2;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 25px;
+}
+
+.admin-topbar h2{
+    font-size:21px;
+}
+
+.admin-mobile-menu{
+    display:none;
+    border:0;
+    background:var(--green);
+    color:white;
+    border-radius:8px;
+    padding:9px 12px;
+}
+
+.admin-content{
+    padding:25px;
+    max-width:1500px;
+}
+
+.admin-section{
+    display:none;
+}
+
+.admin-section.active{
+    display:block;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.stat small{
+    color:var(--gray);
+}
+
+.stat strong{
+    display:block;
+    font-size:29px;
+    color:var(--green);
+}
+
+.admin-card{
+    background:white;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+    margin-bottom:20px;
+}
+
+.admin-card h3{
+    margin-bottom:12px;
+}
+
+.admin-actions{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.admin-table-wrapper{
+    overflow:auto;
+    background:white;
+    border-radius:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+}
+
+.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+.admin-table th,
+.admin-table td{
+    padding:13px;
+    border-bottom:1px solid #edf1ee;
+    text-align:left;
+    font-size:14px;
+}
+
+.admin-table th{
+    background:#f4f8f5;
+    font-weight:900;
+}
+
+.admin-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.media-admin-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.admin-card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.admin-card video{
+    width:100%;
+    max-height:250px;
+    background:#000;
+    border-radius:12px;
+}
+
+.section-title{
+    margin-bottom:20px;
+}
+
+.section-title h2{
+    font-size:28px;
+}
+
+.section-title p{
+    color:var(--gray);
+}
+
+.empty{
+    color:var(--gray);
+    padding:20px 0;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .gallery-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .offers-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .testimonials-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .contact-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .media-admin-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:760px){
+
+    #mainNav{
+        display:none;
+        position:absolute;
+        left:0;
+        right:0;
+        top:78px;
+        background:white;
+        flex-direction:column;
+        align-items:stretch;
+        padding:15px 20px 20px;
+        box-shadow:0 10px 25px rgba(0,0,0,.1);
+    }
+
+    #mainNav.open{
+        display:flex;
+    }
+
+    #mainNav a{
+        padding:10px;
+    }
+
+    .menu-toggle{
+        display:block;
+    }
+
+    .hero{
+        min-height:570px;
+    }
+
+    .hero h1{
+        font-size:45px;
+    }
+
+    .hero p{
+        font-size:17px;
+    }
+
+    section{
+        padding:60px 16px;
+    }
+
+    .cards,
+    .video-grid,
+    .offers-grid,
+    .testimonials-grid,
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .gallery-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .about-boxes{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .media-admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .admin-sidebar{
+        position:fixed;
+        left:-280px;
+        top:0;
+        bottom:0;
+        z-index:20;
+        transition:.25s;
+    }
+
+    .admin-sidebar.mobile-open{
+        left:0;
+    }
+
+    .admin-mobile-menu{
+        display:block;
+    }
+
+    .admin-content{
+        padding:16px;
+    }
+
+    .admin-topbar{
+        padding:10px 15px;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .navbar{
+        padding:10px 14px;
+    }
+
+    .logo{
+        font-size:20px;
+    }
+
+    .hero-content{
+        padding:60px 16px;
+    }
+
+    .hero h1{
+        font-size:39px;
+    }
+
+    .gallery-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .modal-box{
+        padding:22px 17px;
+    }
+
+}
+
+/* =========================================================
+   NOTIFICAÇÃO
+========================================================= */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translateX(-50%) translateY(100px);
+    background:#10251b;
+    color:white;
+    padding:13px 20px;
+    border-radius:12px;
+    z-index:7000;
+    opacity:0;
+    transition:.3s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- ======================================================
+     SITE PÚBLICO
+====================================================== -->
+
+<header>
+    <div class="navbar">
+
+        <a href="#inicio" class="logo">
+            Binzole <span>Viajar Verde</span>
+        </a>
+
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+        <nav id="mainNav">
+            <a href="#inicio">Início</a>
+            <a href="#viagens">Viagens</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#galeria">Galeria</a>
+            <a href="#videos">Vídeos</a>
+            <a href="#ofertas">Ofertas</a>
+            <a href="#contactos">Contactos</a>
+            <a href="#" class="nav-admin" onclick="openAdminLogin();return false;">
+                Área administrativa
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+
+<section class="hero" id="inicio">
+
+    <div class="hero-content">
+
+        <div class="hero-content-inner">
+
+            <div class="hero-badge">
+                🌍 Viaje por Angola
+            </div>
+
+            <h1 id="heroTitle">
+                Viaje. Descubra. Viva.
+            </h1>
+
+            <p id="heroText">
+                Viajar ficou mais simples. Descubra Angola através das experiências da Binzole Viajar Verde.
+            </p>
+
+            <a
+                href="#viagens"
+                class="btn btn-light btn-large"
+                id="heroButton">
+                Ver viagens
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- VIAGENS -->
+<section class="trips-section" id="viagens">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>Explore Angola</span>
+            <h2>Próximas viagens</h2>
+            <p>
+                Escolha uma das nossas viagens programadas e faça a sua reserva.
+            </p>
+        </div>
+
+        <div class="cards" id="tripsContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- SOBRE -->
+<section
+    class="about"
+    id="sobre"
+    style="background-image:linear-gradient(rgba(0,45,25,.72),rgba(0,45,25,.78)),url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1800&q=85');">
+
+    <div class="section-container about-content">
+
+        <div class="section-heading">
+
+            <span>Quem somos</span>
+
+            <h2 id="aboutTitle">
+                Sobre o Viajar Verde
+            </h2>
+
+        </div>
+
+        <p class="about-text" id="aboutText">
+            A Binzole Viajar Verde é uma empresa dedicada a proporcionar experiências de viagem seguras, organizadas e memoráveis.
+        </p>
+
+        <div class="about-boxes">
+
+            <div class="about-box">
+                <h3>🎯 Missão</h3>
+                <p id="missionText"></p>
+            </div>
+
+            <div class="about-box">
+                <h3>👁️ Visão</h3>
+                <p id="visionText"></p>
+            </div>
+
+            <div class="about-box">
+                <h3>⭐ Valores</h3>
+                <p id="valuesText"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- GALERIA -->
+<section id="galeria">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>Momentos</span>
+            <h2>Galeria</h2>
+            <p>
+                Imagens das nossas viagens e experiências.
+            </p>
+        </div>
+
+        <div class="gallery-grid" id="galleryContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- VÍDEOS -->
+<section class="videos-section" id="videos">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>Veja as experiências</span>
+            <h2>Vídeos</h2>
+            <p>
+                Conheça melhor as nossas viagens através dos vídeos.
+            </p>
+        </div>
+
+        <div class="video-grid" id="videosContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- OFERTAS -->
+<section id="ofertas">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>Novidades</span>
+            <h2>Ofertas e notícias</h2>
+            <p>
+                Acompanhe as novidades da Binzole Viajar Verde.
+            </p>
+        </div>
+
+        <div class="offers-grid" id="offersContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- TESTEMUNHOS -->
+<section class="testimonials-section">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span>Experiências</span>
+            <h2>O que dizem os nossos clientes</h2>
+        </div>
+
+        <div class="testimonials-grid" id="testimonialsContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- CONTACTOS -->
+<section class="contact-section" id="contactos">
+
+    <div class="section-container">
+
+        <div class="section-heading">
+            <span style="color:#8fd3ad;">Fale connosco</span>
+            <h2>Contactos</h2>
+            <p style="color:#b9cfc3;">
+                Estamos disponíveis para ajudar a organizar a sua próxima viagem.
+            </p>
+        </div>
+
+        <div class="contact-grid">
+
+            <div class="contact-item">
+                <small>Telefone</small>
+                <strong id="contactPhone">A definir</strong>
+            </div>
+
+            <div class="contact-item">
+                <small>WhatsApp</small>
+                <strong id="contactWhatsapp">A definir</strong>
+            </div>
+
+            <div class="contact-item">
+                <small>Email</small>
+                <strong id="contactEmail">A definir</strong>
+            </div>
+
+            <div class="contact-item">
+                <small>Endereço</small>
+                <strong id="contactAddress">Angola</strong>
+            </div>
+
+            <div class="contact-item">
+                <small>Instagram</small>
+                <strong id="contactInstagram">A definir</strong>
+            </div>
+
+            <div class="contact-item">
+                <small>Facebook / TikTok</small>
+                <strong id="contactSocial">A definir / A definir</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer>
+    <p id="footerText">
+        © 2026 Binzole Viajar Verde — Todos os direitos reservados.
+    </p>
+</footer>
+
+<a
+    id="whatsappButton"
+    class="whatsapp"
+    href="#"
+    target="_blank"
+    rel="noopener"
+    style="display:none;"
+    aria-label="WhatsApp">
+    ☎
+</a>
+
+<!-- ======================================================
+     MODAL RESERVA
+====================================================== -->
+
+<div class="modal" id="reservationModal">
+
+    <div class="modal-box">
+
+        <button
+            class="modal-close"
+            onclick="closeReservation()">
+            ×
+        </button>
+
+        <h2>Fazer reserva</h2>
+
+        <form onsubmit="submitReservation(event)">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label>Viagem</label>
+
+                    <select id="reservationTrip"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de pessoas</label>
+
+                    <input
+                        type="number"
+                        id="reservationPeople"
+                        min="1"
+                        value="1"
+                        onchange="calculateReservation()"
+                        oninput="calculateReservation()"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nome completo</label>
+
+                    <input
+                        type="text"
+                        id="reservationName"
+                        placeholder="Digite o seu nome"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Telefone</label>
+
+                    <input
+                        type="tel"
+                        id="reservationPhone"
+                        placeholder="+244 ..."
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+
+                    <input
+                        type="email"
+                        id="reservationEmail"
+                        placeholder="seu@email.com">
+                </div>
+
+                <div class="form-group full">
+                    <label>Observações</label>
+
+                    <textarea
+                        id="reservationNotes"
+                        placeholder="Alguma informação adicional?"></textarea>
+                </div>
+
+            </div>
+
+            <div class="calculation">
+
+                <div class="calc-row">
+                    <span>Total</span>
+                    <strong id="reservationTotal">0 Kz</strong>
+                </div>
+
+                <div class="calc-row">
+                    <span>Entrada</span>
+                    <strong id="reservationDeposit">0 Kz</strong>
+                </div>
+
+                <div class="calc-row">
+                    <span>Restante</span>
+                    <strong id="reservationRemaining">0 Kz</strong>
+                </div>
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-large"
+                style="width:100%;">
+                Enviar reserva
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- ======================================================
+     LOGIN ADMIN
+====================================================== -->
+
+<div class="modal" id="loginScreen">
+
+    <div class="modal-box login-box">
+
+        <button
+            class="modal-close"
+            onclick="closeAdminLogin()">
+            ×
+        </button>
+
+        <div class="login-logo">
+            Binzole
+        </div>
+
+        <p class="login-subtitle">
+            Painel administrativo
+        </p>
+
+        <div class="form-group">
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                id="adminUser"
+                placeholder="Digite o email">
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Palavra-passe</label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Digite a palavra-passe">
+
+        </div>
+
+        <div id="loginStatus" style="margin-bottom:15px;"></div>
+
+        <button
+            class="btn btn-primary"
+            style="width:100%;"
+            onclick="adminLogin()">
+            Entrar
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ======================================================
+     PAINEL ADMINISTRATIVO
+====================================================== -->
+
+<div id="adminPanel">
+
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="admin-brand">
+            Binzole <span>Admin</span>
+        </div>
+
+        <div class="admin-menu">
+
+            <button onclick="showAdminSection('dashboard')">
+                📊 Dashboard
+            </button>
+
+            <button onclick="showAdminSection('home')">
+                🏠 Página inicial
+            </button>
+
+            <button onclick="showAdminSection('about')">
+                📖 Sobre
+            </button>
+
+            <button onclick="showAdminSection('trips')">
+                ✈️ Viagens
+            </button>
+
+            <button onclick="showAdminSection('gallery')">
+                🖼️ Galeria
+            </button>
+
+            <button onclick="showAdminSection('videos')">
+                🎥 Vídeos
+            </button>
+
+            <button onclick="showAdminSection('offers')">
+                🎁 Ofertas
+            </button>
+
+            <button onclick="showAdminSection('testimonials')">
+                ⭐ Testemunhos
+            </button>
+
+            <button onclick="showAdminSection('payments')">
+                💳 Pagamentos
+            </button>
+
+            <button onclick="showAdminSection('reservations')">
+                📅 Reservas
+            </button>
+
+            <button onclick="showAdminSection('company-documents')">
+                📁 Documentos da empresa
+            </button>
+
+            <button onclick="showAdminSection('registration-files')">
+                📝 Fichas de inscrição
+            </button>
+
+            <button onclick="showAdminSection('contacts')">
+                📞 Contactos
+            </button>
+
+            <button onclick="showAdminSection('appearance')">
+                🎨 Aparência
+            </button>
+
+            <button onclick="showAdminSection('settings')">
+                ⚙️ Configurações
+            </button>
+
+            <button onclick="closeAdminPanel()">
+                🌐 Ver site
+            </button>
+
+            <button onclick="adminLogout()">
+                🚪 Terminar sessão
+            </button>
+
+        </div>
+
+    </aside>
+
+    <div class="admin-main">
+
+        <div class="admin-topbar">
+
+            <button
+                class="admin-mobile-menu"
+                onclick="toggleAdminMenu()">
+                ☰ Menu
+            </button>
+
+            <h2>Painel administrativo</h2>
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeAdminPanel()">
+                Ver site
+            </button>
+
+        </div>
+
+        <div class="admin-content">
+
+<!-- ======================================================
+     DASHBOARD
+====================================================== -->
+
+<section class="admin-section active" id="admin-dashboard">
+
+    <div class="section-title">
+        <h2>Dashboard</h2>
+        <p>Visão geral do site.</p>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <small>Viagens</small>
+            <strong id="statTrips">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Reservas</small>
+            <strong id="statReservations">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Vídeos</small>
+            <strong id="statVideos">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Galeria</small>
+            <strong id="statGallery">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Ofertas</small>
+            <strong id="statOffers">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>Testemunhos</small>
+            <strong id="statTestimonials">0</strong>
+        </div>
+
+    </div>
+
+    <div class="admin-card">
+
+        <h3>Bem-vindo ao painel</h3>
+
+        <p>
+            Aqui podes administrar o conteúdo da Binzole Viajar Verde.
+            As alterações são sincronizadas com o Supabase quando estiveres
+            autenticado como administrador.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     HOME
+====================================================== -->
+
+<section class="admin-section" id="admin-home">
+
+    <div class="section-title">
+        <h2>Página inicial</h2>
+        <p>Altera o conteúdo principal do site.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Título principal</label>
+
+            <input
+                id="editHeroTitle"
+                type="text">
+        </div>
+
+        <div class="form-group">
+            <label>Texto principal</label>
+
+            <textarea id="editHeroText"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Texto do botão</label>
+
+            <input
+                id="editHeroButton"
+                type="text">
+        </div>
+
+        <div class="form-group">
+            <label>Imagem de fundo da página inicial</label>
+
+            <input
+                id="editHeroImageFile"
+                type="file"
+                accept="image/*"
+                onchange="previewHeroImage(event)">
+
+            <small style="display:block;margin-top:8px;color:#66736d;">
+                Escolhe uma imagem do computador ou telemóvel. A nova imagem será guardada online no Supabase.
+            </small>
+
+            <div
+                id="heroImagePreview"
+                style="margin-top:14px;border-radius:14px;overflow:hidden;background:#eef3ef;min-height:180px;display:flex;align-items:center;justify-content:center;">
+            </div>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveHome()">
+            Guardar alterações
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     ABOUT
+====================================================== -->
+
+<section class="admin-section" id="admin-about">
+
+    <div class="section-title">
+        <h2>Sobre a empresa</h2>
+        <p>Edita as informações da Binzole Viajar Verde.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Título</label>
+            <input id="editAboutTitle">
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="editAboutText"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Missão</label>
+            <textarea id="editMission"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Visão</label>
+            <textarea id="editVision"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Valores</label>
+            <textarea id="editValues"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>URL da imagem de fundo</label>
+            <input id="editAboutImage">
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveAbout()">
+            Guardar Sobre
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     TRIPS
+====================================================== -->
+
+<section class="admin-section" id="admin-trips">
+
+    <div class="section-title">
+        <h2>Viagens</h2>
+        <p>Cria, edita e elimina viagens.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <input
+            type="hidden"
+            id="tripEditId">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Origem</label>
+                <input id="tripOrigin" placeholder="Luanda">
+            </div>
+
+            <div class="form-group">
+                <label>Destino</label>
+                <input id="tripDestination" placeholder="Huíla">
+            </div>
+
+            <div class="form-group">
+                <label>Data</label>
+                <input id="tripDate" type="date">
+            </div>
+
+            <div class="form-group">
+                <label>Hora</label>
+                <input id="tripTime" type="time">
+            </div>
+
+            <div class="form-group">
+                <label>Preço</label>
+                <input id="tripPrice" type="number">
+            </div>
+
+            <div class="form-group">
+                <label>Lugares</label>
+                <input id="tripSeats" type="number">
+            </div>
+
+            <div class="form-group full">
+                <label>Descrição</label>
+                <textarea id="tripDescription"></textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>URL da imagem</label>
+                <input id="tripImage">
+            </div>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveTrip()">
+            Guardar viagem
+        </button>
+
+    </div>
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-table">
+
+            <thead>
+                <tr>
+                    <th>Origem</th>
+                    <th>Destino</th>
+                    <th>Data/Hora</th>
+                    <th>Preço</th>
+                    <th>Lugares</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody id="adminTripsTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     GALLERY
+====================================================== -->
+
+<section class="admin-section" id="admin-gallery">
+
+    <div class="section-title">
+        <h2>Galeria</h2>
+        <p>Adiciona imagens através do computador/telemóvel ou URL.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Título da imagem</label>
+            <input id="galleryTitle" placeholder="Imagem da viagem">
+        </div>
+
+        <div class="form-group">
+            <label>Selecionar imagem</label>
+            <input
+                id="galleryFile"
+                type="file"
+                accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label>Ou URL da imagem</label>
+            <input
+                id="galleryUrl"
+                placeholder="https://...">
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="addGalleryImage()">
+            Adicionar imagem
+        </button>
+
+    </div>
+
+    <div
+        class="media-admin-grid"
+        id="adminGallery">
+    </div>
+
+</section>
+
+<!-- ======================================================
+     VIDEOS
+====================================================== -->
+
+<section class="admin-section" id="admin-videos">
+
+    <div class="section-title">
+        <h2>Vídeos</h2>
+        <p>Publica vídeos diretamente no armazenamento online.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Título</label>
+            <input id="videoTitle">
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="videoDescription"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Selecionar vídeo</label>
+            <input
+                id="videoFile"
+                type="file"
+                accept="video/*">
+        </div>
+
+        <div class="form-group">
+            <label>Ou URL do vídeo</label>
+            <input id="videoUrl">
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="addVideo()">
+            Publicar vídeo
+        </button>
+
+    </div>
+
+    <div
+        class="media-admin-grid"
+        id="adminVideos">
+    </div>
+
+</section>
+
+<!-- ======================================================
+     OFFERS
+====================================================== -->
+
+<section class="admin-section" id="admin-offers">
+
+    <div class="section-title">
+        <h2>Ofertas e notícias</h2>
+        <p>Publica informações promocionais no site.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <input
+            type="hidden"
+            id="offerEditId">
+
+        <div class="form-group">
+            <label>Título</label>
+            <input id="offerTitle">
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="offerDescription"></textarea>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveOffer()">
+            Guardar
+        </button>
+
+    </div>
+
+    <div id="adminOffers"></div>
+
+</section>
+
+<!-- ======================================================
+     TESTIMONIALS
+====================================================== -->
+
+<section class="admin-section" id="admin-testimonials">
+
+    <div class="section-title">
+        <h2>Testemunhos</h2>
+        <p>Adiciona experiências dos clientes.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <input
+            type="hidden"
+            id="testimonialEditId">
+
+        <div class="form-group">
+            <label>Nome</label>
+            <input id="testimonialName">
+        </div>
+
+        <div class="form-group">
+            <label>Comentário</label>
+            <textarea id="testimonialComment"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Avaliação</label>
+
+            <select id="testimonialRating">
+                <option value="5">★★★★★ — 5</option>
+                <option value="4">★★★★☆ — 4</option>
+                <option value="3">★★★☆☆ — 3</option>
+                <option value="2">★★☆☆☆ — 2</option>
+                <option value="1">★☆☆☆☆ — 1</option>
+            </select>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveTestimonial()">
+            Guardar testemunho
+        </button>
+
+    </div>
+
+    <div id="adminTestimonials"></div>
+
+</section>
+
+<!-- ======================================================
+     PAYMENTS
+====================================================== -->
+
+<section class="admin-section" id="admin-payments">
+
+    <div class="section-title">
+        <h2>Pagamentos</h2>
+        <p>Define a percentagem de entrada e métodos disponíveis.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+
+            <label>
+                Percentagem de entrada
+            </label>
+
+            <input
+                id="paymentPercent"
+                type="number"
+                min="0"
+                max="100">
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="savePaymentPercent()">
+            Guardar percentagem
+        </button>
+
+    </div>
+
+    <div class="admin-card">
+
+        <h3>Adicionar método de pagamento</h3>
+
+        <div class="form-group">
+            <label>Nome</label>
+            <input
+                id="paymentMethodName"
+                placeholder="Ex.: Multicaixa Express">
+        </div>
+
+        <div class="form-group">
+            <label>Instruções</label>
+            <textarea
+                id="paymentMethodInstructions"
+                placeholder="Indique os dados para pagamento"></textarea>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="addPaymentMethod()">
+            Adicionar método
+        </button>
+
+    </div>
+
+    <div id="adminPaymentMethods"></div>
+
+</section>
+
+<!-- ======================================================
+     RESERVATIONS
+====================================================== -->
+
+<section class="admin-section" id="admin-reservations">
+
+    <div class="section-title">
+        <h2>Reservas</h2>
+        <p>Consulta e atualiza as reservas dos clientes.</p>
+    </div>
+
+    <div class="admin-table-wrapper">
+
+        <table class="admin-table">
+
+            <thead>
+
+                <tr>
+                    <th>Cliente</th>
+                    <th>Telefone</th>
+                    <th>Viagem</th>
+                    <th>Pessoas</th>
+                    <th>Total</th>
+                    <th>Entrada</th>
+                    <th>Restante</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="adminReservationsTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     DOCUMENTOS DA EMPRESA
+====================================================== -->
+
+<section class="admin-section" id="admin-company-documents">
+
+    <div class="section-title">
+        <h2>Documentos da empresa</h2>
+        <p>Guarda e consulta documentos internos da Binzole Viajar Verde.</p>
+    </div>
+
+    <div class="admin-card">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nome do documento</label>
+                <input id="companyDocumentName" type="text" placeholder="Ex.: Alvará da empresa" required>
+            </div>
+            <div class="form-group">
+                <label>Ficheiro</label>
+                <input id="companyDocumentFile" type="file" required>
+            </div>
+            <div class="form-group full">
+                <label>Descrição (opcional)</label>
+                <textarea id="companyDocumentDescription" placeholder="Descrição do documento"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="uploadAdminDocument('company')">Guardar documento</button>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead><tr><th>Documento</th><th>Descrição</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="companyDocumentsTable"><tr><td colspan="4">A carregar documentos...</td></tr></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ======================================================
+     FICHAS DE INSCRIÇÃO
+====================================================== -->
+
+<section class="admin-section" id="admin-registration-files">
+
+    <div class="section-title">
+        <h2>Fichas de inscrição</h2>
+        <p>Guarda e consulta fichas de inscrição dos viajantes.</p>
+    </div>
+
+    <div class="admin-card">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nome da ficha / inscrito</label>
+                <input id="registrationDocumentName" type="text" placeholder="Ex.: Ficha de inscrição - João" required>
+            </div>
+            <div class="form-group">
+                <label>Ficheiro da ficha</label>
+                <input id="registrationDocumentFile" type="file" required>
+            </div>
+            <div class="form-group full">
+                <label>Descrição (opcional)</label>
+                <textarea id="registrationDocumentDescription" placeholder="Notas sobre a inscrição"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="uploadAdminDocument('registration')">Guardar ficha de inscrição</button>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead><tr><th>Ficha / Inscrito</th><th>Descrição</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="registrationDocumentsTable"><tr><td colspan="4">A carregar fichas...</td></tr></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ======================================================
+     CONTACTS
+====================================================== -->
+
+<section class="admin-section" id="admin-contacts">
+
+    <div class="section-title">
+        <h2>Contactos</h2>
+        <p>
+            Altera os contactos que aparecem no site e no WhatsApp.
+        </p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Telefone</label>
+                <input
+                    id="editPhone"
+                    placeholder="+244 ...">
+            </div>
+
+            <div class="form-group">
+                <label>WhatsApp</label>
+                <input
+                    id="editWhatsapp"
+                    placeholder="+244 ...">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input
+                    id="editEmail"
+                    type="email">
+            </div>
+
+            <div class="form-group">
+                <label>Endereço</label>
+                <input id="editAddress">
+            </div>
+
+            <div class="form-group">
+                <label>Instagram</label>
+                <input id="editInstagram">
+            </div>
+
+            <div class="form-group">
+                <label>Facebook</label>
+                <input id="editFacebook">
+            </div>
+
+            <div class="form-group">
+                <label>TikTok</label>
+                <input id="editTikTok">
+            </div>
+
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveContacts()">
+            Guardar contactos
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     APPEARANCE
+====================================================== -->
+
+<section class="admin-section" id="admin-appearance">
+
+    <div class="section-title">
+        <h2>Aparência</h2>
+        <p>Personaliza o nome, cor e rodapé.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Nome do logotipo</label>
+            <input id="appearanceLogo">
+        </div>
+
+        <div class="form-group">
+            <label>Cor principal</label>
+            <input
+                id="appearanceColor"
+                type="color">
+        </div>
+
+        <div class="form-group">
+            <label>Rodapé</label>
+            <textarea id="appearanceFooter"></textarea>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveAppearance()">
+            Guardar aparência
+        </button>
+
+    </div>
+
+</section>
+
+<!-- ======================================================
+     SETTINGS
+====================================================== -->
+
+<section class="admin-section" id="admin-settings">
+
+    <div class="section-title">
+        <h2>Configurações</h2>
+        <p>Configurações gerais do site.</p>
+    </div>
+
+    <div class="admin-card">
+
+        <div class="form-group">
+            <label>Nome da empresa</label>
+            <input id="settingCompany">
+        </div>
+
+        <div class="form-group">
+            <label>Moeda</label>
+            <input id="settingCurrency">
+        </div>
+
+        <div class="form-group">
+            <label>Título do site</label>
+            <input id="settingTitle">
+        </div>
+
+        <button
+            class="btn btn-primary"
+            onclick="saveSettings()">
+            Guardar configurações
+        </button>
+
+    </div>
+
+</section>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+/* ==========================================================
+   SUPABASE
+========================================================== */
+
+const SUPABASE_URL =
+"https://cfatpkuiwzjzjifmpokg.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_N6tSub7q5oZts5ItujZeVA_DkrY53mi";
+
+const ADMIN_UID =
+"fa69f122-3b2a-4d56-81cc-89c3687f2fee";
+
+const SITE_DATA_ID = 1;
+
+const STORAGE_BUCKET = "site-media";
+const ADMIN_DOCUMENTS_BUCKET = "company-private-files";
+
+const ONLINE_MODE =
+SUPABASE_URL.startsWith("http") &&
+SUPABASE_PUBLISHABLE_KEY.startsWith("sb_publishable_");
+
+let sb = null;
+
+if(ONLINE_MODE && window.supabase){
+    sb = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+}
+
+/* ==========================================================
+   DADOS PADRÃO
+========================================================== */
+
+const defaultData = {
+
+    company:"Binzole Viajar Verde",
+
+    home:{
+        title:"Viaje. Descubra. Viva.",
+        text:"Viajar ficou mais simples. Descubra Angola através das experiências da Binzole Viajar Verde.",
+        button:"Ver viagens",
+        backgroundImage:"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=85"
+    },
+
+    about:{
+        title:"Sobre o Viajar Verde",
+        text:"A Binzole Viajar Verde é uma empresa dedicada a proporcionar experiências de viagem seguras, organizadas e memoráveis. Criamos viagens programadas para quem deseja conhecer novos lugares e aproveitar cada momento.",
+        mission:"Proporcionar viagens de qualidade, segurança e conforto.",
+        vision:"Ser uma referência em turismo e viagens em Angola.",
+        values:"Segurança, responsabilidade, qualidade e respeito.",
+        image:"https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1800&q=85"
+    },
+
+    trips:[
+        {
+            id:1,
+            origin:"Luanda",
+            destination:"Huíla",
+            date:"2026-09-20",
+            time:"06:00",
+            price:50000,
+            seats:45,
+            description:"Viagem programada de Luanda para Huíla.",
+            image:"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+            id:2,
+            origin:"Luanda",
+            destination:"Benguela",
+            date:"2026-09-25",
+            time:"06:30",
+            price:40000,
+            seats:40,
+            description:"Viagem programada de Luanda para Benguela.",
+            image:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=80"
+        }
+    ],
+
+    gallery:[
+        {
+            id:1,
+            title:"Viagem",
+            url:"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+            id:2,
+            title:"Destino",
+            url:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+            id:3,
+            title:"Turismo",
+            url:"https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1000&q=80"
+        },
+        {
+            id:4,
+            title:"Natureza",
+            url:"https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1000&q=80"
+        }
+    ],
+
+    videos:[],
+    offers:[],
+
+    testimonials:[
+        {
+            id:1,
+            name:"Cliente Viajar Verde",
+            comment:"Uma experiência muito boa. Organização e atendimento excelentes.",
+            rating:5
+        }
+    ],
+
+    payments:{
+        percent:30,
+        methods:[]
+    },
+
+    contacts:{
+        phone:"",
+        whatsapp:"",
+        email:"",
+        address:"Angola",
+        instagram:"",
+        facebook:"",
+        tiktok:""
+    },
+
+    appearance:{
+        logo:"Binzole Viajar Verde",
+        color:"#087443",
+        footer:"© 2026 Binzole Viajar Verde — Todos os direitos reservados."
+    },
+
+    settings:{
+        company:"Binzole Viajar Verde",
+        currency:"Kz",
+        title:"Binzole Viajar Verde"
+    },
+
+    reservations:[]
+};
+
+let data =
+JSON.parse(localStorage.getItem("binzoli_data")) ||
+JSON.parse(JSON.stringify(defaultData));
+
+/* ==========================================================
+   NORMALIZAÇÃO
+========================================================== */
+
+function normalizeData(){
+
+    if(!data || typeof data !== "object"){
+        data = JSON.parse(JSON.stringify(defaultData));
+    }
+
+    const oldName = "Binzoli Viajar Verde";
+    const newName = "Binzole Viajar Verde";
+
+    if(data.company === oldName)
+        data.company = newName;
+
+    if(!data.home)
+        data.home = JSON.parse(JSON.stringify(defaultData.home));
+
+    if(!data.about)
+        data.about = JSON.parse(JSON.stringify(defaultData.about));
+
+    if(!data.contacts)
+        data.contacts = JSON.parse(JSON.stringify(defaultData.contacts));
+
+    if(!data.appearance)
+        data.appearance = JSON.parse(JSON.stringify(defaultData.appearance));
+
+    if(!data.settings)
+        data.settings = JSON.parse(JSON.stringify(defaultData.settings));
+
+    data.home.title = data.home.title || defaultData.home.title;
+    data.home.text = data.home.text || defaultData.home.text;
+    data.home.button = data.home.button || defaultData.home.button;
+    data.home.backgroundImage = data.home.backgroundImage || defaultData.home.backgroundImage;
+
+    if(typeof data.home.text === "string")
+        data.home.text = data.home.text.replaceAll(oldName,newName);
+
+    data.about.title = data.about.title || defaultData.about.title;
+    data.about.text = data.about.text || defaultData.about.text;
+    data.about.mission = data.about.mission || defaultData.about.mission;
+    data.about.vision = data.about.vision || defaultData.about.vision;
+    data.about.values = data.about.values || defaultData.about.values;
+    data.about.image = data.about.image || defaultData.about.image;
+
+    if(typeof data.about.text === "string")
+        data.about.text = data.about.text.replaceAll(oldName,newName);
+
+    data.contacts.phone = data.contacts.phone || "";
+    data.contacts.whatsapp = data.contacts.whatsapp || "";
+    data.contacts.email = data.contacts.email || "";
+    data.contacts.address = data.contacts.address || "Angola";
+    data.contacts.instagram = data.contacts.instagram || "";
+    data.contacts.facebook = data.contacts.facebook || "";
+    data.contacts.tiktok = data.contacts.tiktok || "";
+
+    data.trips = Array.isArray(data.trips) ? data.trips : [];
+    data.gallery = Array.isArray(data.gallery) ? data.gallery : [];
+    data.videos = Array.isArray(data.videos) ? data.videos : [];
+    data.offers = Array.isArray(data.offers) ? data.offers : [];
+    data.testimonials = Array.isArray(data.testimonials) ? data.testimonials : [];
+    data.reservations = Array.isArray(data.reservations) ? data.reservations : [];
+
+    data.payments = data.payments ||
+        JSON.parse(JSON.stringify(defaultData.payments));
+
+    data.payments.methods =
+        Array.isArray(data.payments.methods)
+        ? data.payments.methods
+        : [];
+
+    data.payments.percent =
+        Number(data.payments.percent ?? 30);
+
+    if(data.appearance.logo === oldName)
+        data.appearance.logo = newName;
+
+    if(typeof data.appearance.footer === "string")
+        data.appearance.footer =
+            data.appearance.footer.replaceAll(oldName,newName);
+
+    if(data.settings.company === oldName)
+        data.settings.company = newName;
+
+    if(data.settings.title === oldName)
+        data.settings.title = newName;
+
+    if(data.appearance.color){
+        document.documentElement.style.setProperty(
+            "--green",
+            data.appearance.color
+        );
+    }
+}
+
+/* ==========================================================
+   LOCAL
+========================================================== */
+
+function saveLocal(){
+
+    try{
+        localStorage.setItem(
+            "binzoli_data",
+            JSON.stringify(data)
+        );
+        return true;
+    }catch(error){
+        console.error(error);
+        return false;
+    }
+}
+
+/* ==========================================================
+   ADMIN SESSION
+========================================================== */
+
+async function getAdminSession(){
+
+    if(!ONLINE_MODE || !sb)
+        return null;
+
+    try{
+
+        const {
+            data:sessionData,
+            error
+        } = await sb.auth.getSession();
+
+        if(error)
+            return null;
+
+        const session = sessionData?.session;
+
+        if(!session || !session.user)
+            return null;
+
+        if(session.user.id !== ADMIN_UID)
+            return null;
+
+        return session;
+
+    }catch(error){
+
+        console.error(error);
+        return null;
+
+    }
+}
+
+async function isAdmin(){
+    return !!(await getAdminSession());
+}
+
+/* ==========================================================
+   SAVE ONLINE
+========================================================== */
+
+async function saveData(){
+
+    normalizeData();
+
+    saveLocal();
+    renderPublic();
+    renderAdmin();
+
+    if(!ONLINE_MODE || !sb)
+        return false;
+
+    const session = await getAdminSession();
+
+    if(!session)
+        return false;
+
+    const onlineData =
+        JSON.parse(JSON.stringify(data));
+
+    delete onlineData.reservations;
+
+    try{
+
+        const {error} =
+            await sb
+            .from("site_data")
+            .upsert({
+                id:SITE_DATA_ID,
+                data:onlineData,
+                updated_at:new Date().toISOString()
+            },{
+                onConflict:"id"
+            });
+
+        if(error){
+            console.error(error);
+            alert("Erro ao sincronizar com o Supabase:\n\n"+error.message);
+            return false;
+        }
+
+        return true;
+
+    }catch(error){
+
+        console.error(error);
+        alert("Não foi possível sincronizar com o servidor.");
+        return false;
+
+    }
+}
+
+/* ==========================================================
+   LOAD ONLINE
+========================================================== */
+
+async function loadOnlineData(){
+
+    if(!ONLINE_MODE || !sb)
+        return false;
+
+    try{
+
+        const {
+            data:result,
+            error
+        } =
+        await sb
+        .from("site_data")
+        .select("data")
+        .eq("id",SITE_DATA_ID)
+        .maybeSingle();
+
+        if(error){
+            console.error(error);
+            return false;
+        }
+
+        if(
+            result &&
+            result.data &&
+            typeof result.data === "object"
+        ){
+
+            const remote = result.data;
+
+            data = {
+                ...JSON.parse(JSON.stringify(defaultData)),
+                ...remote,
+                home:{
+                    ...defaultData.home,
+                    ...(remote.home || {})
+                },
+                about:{
+                    ...defaultData.about,
+                    ...(remote.about || {})
+                },
+                contacts:{
+                    ...defaultData.contacts,
+                    ...(remote.contacts || {})
+                },
+                appearance:{
+                    ...defaultData.appearance,
+                    ...(remote.appearance || {})
+                },
+                settings:{
+                    ...defaultData.settings,
+                    ...(remote.settings || {})
+                },
+                payments:{
+                    ...defaultData.payments,
+                    ...(remote.payments || {})
+                },
+                trips:Array.isArray(remote.trips)?remote.trips:[],
+                gallery:Array.isArray(remote.gallery)?remote.gallery:[],
+                videos:Array.isArray(remote.videos)?remote.videos:[],
+                offers:Array.isArray(remote.offers)?remote.offers:[],
+                testimonials:Array.isArray(remote.testimonials)?remote.testimonials:[],
+                reservations:Array.isArray(remote.reservations)?remote.reservations:[]
+            };
+
+            normalizeData();
+            saveLocal();
+            renderPublic();
+            renderAdmin();
+
+            return true;
+        }
+
+        return false;
+
+    }catch(error){
+
+        console.error(error);
+        return false;
+
+    }
+}
+
+/* ==========================================================
+   INITIAL ONLINE DATA
+========================================================== */
+
+async function ensureInitialOnlineData(){
+
+    if(!ONLINE_MODE || !sb)
+        return false;
+
+    const session = await getAdminSession();
+
+    if(!session)
+        return false;
+
+    try{
+
+        const {
+            data:result,
+            error
+        } =
+        await sb
+        .from("site_data")
+        .select("id")
+        .eq("id",SITE_DATA_ID)
+        .maybeSingle();
+
+        if(error){
+            console.error(error);
+            return false;
+        }
+
+        if(result)
+            return true;
+
+        const onlineData =
+            JSON.parse(JSON.stringify(data));
+
+        delete onlineData.reservations;
+
+        const {error:insertError} =
+            await sb
+            .from("site_data")
+            .insert({
+                id:SITE_DATA_ID,
+                data:onlineData,
+                updated_at:new Date().toISOString()
+            });
+
+        if(insertError){
+            console.error(insertError);
+            return false;
+        }
+
+        return true;
+
+    }catch(error){
+
+        console.error(error);
+        return false;
+
+    }
+}
+
+/* ==========================================================
+   RESERVATIONS ONLINE
+========================================================== */
+
+async function loadOnlineReservations(){
+
+    if(!ONLINE_MODE || !sb)
+        return;
+
+    const session = await getAdminSession();
+
+    if(!session)
+        return;
+
+    try{
+
+        const {
+            data:rows,
+            error
+        } =
+        await sb
+        .from("reservations")
+        .select("*")
+        .order("created_at",{ascending:false});
+
+        if(error){
+            console.error(error);
+            return;
+        }
+
+        if(Array.isArray(rows)){
+
+            data.reservations =
+                rows.map(row=>({
+                    id:row.id,
+                    name:row.name,
+                    phone:row.phone,
+                    email:row.email,
+                    tripId:row.trip_id,
+                    trip:row.trip,
+                    people:row.people,
+                    total:Number(row.total || 0),
+                    deposit:Number(row.deposit || 0),
+                    remaining:Number(row.remaining || 0),
+                    notes:row.notes || "",
+                    status:row.status || "Pendente",
+                    date:row.created_at
+                }));
+
+            saveLocal();
+            renderAdmin();
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+}
+
+/* ==========================================================
+   STORAGE
+========================================================== */
+
+async function uploadToStorage(file,folder){
+
+    if(!file || !ONLINE_MODE || !sb)
+        return null;
+
+    const session = await getAdminSession();
+
+    if(!session)
+        throw new Error("Sessão de administrador não encontrada.");
+
+    const cleanName =
+        file.name.replace(/[^\w.\-]+/g,"_");
+
+    const path =
+        folder+"/"+Date.now()+"_"+cleanName;
+
+    const {error} =
+        await sb
+        .storage
+        .from(STORAGE_BUCKET)
+        .upload(
+            path,
+            file,
+            {
+                upsert:false,
+                cacheControl:"3600"
+            }
+        );
+
+    if(error)
+        throw error;
+
+    const {data:urlData} =
+        sb
+        .storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(path);
+
+    return urlData.publicUrl;
+}
+
+/* ==========================================================
+   HELPERS
+========================================================== */
+
+function money(value){
+
+    const currency =
+        data.settings?.currency || "Kz";
+
+    return Number(value || 0)
+        .toLocaleString("pt-AO")+
+        " "+
+        currency;
+}
+
+function esc(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+/* ==========================================================
+   MENU
+========================================================== */
+
+function toggleMenu(){
+
+    const nav =
+        document.getElementById("mainNav");
+
+    if(nav)
+        nav.classList.toggle("open");
+}
+
+function toggleAdminMenu(){
+
+    const sidebar =
+        document.getElementById("adminSidebar");
+
+    if(sidebar)
+        sidebar.classList.toggle("mobile-open");
+}
+
+/* ==========================================================
+   PUBLIC
+========================================================== */
+
+function renderPublic(){
+
+    normalizeData();
+
+    const heroTitle =
+        document.getElementById("heroTitle");
+
+    if(heroTitle)
+        heroTitle.textContent = data.home.title;
+
+    const heroText =
+        document.getElementById("heroText");
+
+    if(heroText)
+        heroText.textContent = data.home.text;
+
+    const heroButton =
+        document.getElementById("heroButton");
+
+    if(heroButton)
+        heroButton.textContent = data.home.button;
+
+    const hero =
+        document.getElementById("inicio");
+
+    if(hero){
+        const heroImage =
+            data.home.backgroundImage ||
+            defaultData.home.backgroundImage;
+
+        hero.style.backgroundImage =
+            "linear-gradient(90deg,rgba(0,35,20,.82),rgba(0,35,20,.35)),url(\""+
+            heroImage.replace(/\"/g,"\\\"")+
+            "\")";
+        hero.style.backgroundPosition = "center";
+        hero.style.backgroundSize = "cover";
+        hero.style.backgroundRepeat = "no-repeat";
+    }
+
+    const aboutTitle =
+        document.getElementById("aboutTitle");
+
+    if(aboutTitle)
+        aboutTitle.textContent = data.about.title;
+
+    const aboutText =
+        document.getElementById("aboutText");
+
+    if(aboutText)
+        aboutText.textContent = data.about.text;
+
+    const mission =
+        document.getElementById("missionText");
+
+    if(mission)
+        mission.textContent = data.about.mission;
+
+    const vision =
+        document.getElementById("visionText");
+
+    if(vision)
+        vision.textContent = data.about.vision;
+
+    const values =
+        document.getElementById("valuesText");
+
+    if(values)
+        values.textContent = data.about.values;
+
+    const about =
+        document.querySelector(".about");
+
+    if(about){
+        about.style.backgroundImage =
+            "linear-gradient(rgba(0,45,25,.72),rgba(0,45,25,.78)),url('"+
+            data.about.image+
+            "')";
+    }
+
+    const phone =
+        document.getElementById("contactPhone");
+
+    if(phone)
+        phone.textContent =
+            data.contacts.phone || "A definir";
+
+    const whatsappText =
+        document.getElementById("contactWhatsapp");
+
+    if(whatsappText)
+        whatsappText.textContent =
+            data.contacts.whatsapp || "A definir";
+
+    const email =
+        document.getElementById("contactEmail");
+
+    if(email)
+        email.textContent =
+            data.contacts.email || "A definir";
+
+    const address =
+        document.getElementById("contactAddress");
+
+    if(address)
+        address.textContent =
+            data.contacts.address || "Angola";
+
+    const instagram =
+        document.getElementById("contactInstagram");
+
+    if(instagram)
+        instagram.textContent =
+            data.contacts.instagram || "A definir";
+
+    const social =
+        document.getElementById("contactSocial");
+
+    if(social)
+        social.textContent =
+            (data.contacts.facebook || "A definir")+
+            " / "+
+            (data.contacts.tiktok || "A definir");
+
+    const footer =
+        document.getElementById("footerText");
+
+    if(footer)
+        footer.textContent = data.appearance.footer;
+
+    document.title =
+        data.settings.title ||
+        "Binzole Viajar Verde";
+
+    const logo =
+        document.querySelector(".logo");
+
+    if(logo){
+
+        const logoName =
+            data.appearance.logo ||
+            data.company ||
+            "Binzole Viajar Verde";
+
+        const parts =
+            logoName.split(" ");
+
+        if(parts.length >= 2){
+
+            logo.innerHTML =
+                esc(parts[0])+
+                " <span>"+
+                esc(parts.slice(1).join(" "))+
+                "</span>";
+
+        }else{
+
+            logo.textContent = logoName;
+
+        }
+    }
+
+    if(data.appearance.color){
+
+        document.documentElement.style.setProperty(
+            "--green",
+            data.appearance.color
+        );
+    }
+
+    let trips="";
+
+    data.trips.forEach(trip=>{
+
+        trips+=`
+
+        <div class="card">
+
+            <img
+                class="card-img"
+                src="${esc(trip.image)}"
+                onerror="this.style.display='none'">
+
+            <div class="card-body">
+
+                <h3>
+                    ${esc(trip.origin)}
+                    →
+                    ${esc(trip.destination)}
+                </h3>
+
+                <div class="meta">
+                    <div>📅 ${esc(trip.date)}</div>
+                    <div>⏰ ${esc(trip.time)}</div>
+                    <div>💺 ${esc(trip.seats)} lugares disponíveis</div>
+                </div>
+
+                <p>${esc(trip.description)}</p>
+
+                <div class="price">
+                    ${money(trip.price)}
+                </div>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="openReservation(${trip.id})">
+                    Reservar agora
+                </button>
+
+            </div>
+
+        </div>`;
+
+    });
+
+    const tripsContainer =
+        document.getElementById("tripsContainer");
+
+    if(tripsContainer)
+        tripsContainer.innerHTML =
+            trips || "<p>Nenhuma viagem disponível.</p>";
+
+    let gallery="";
+
+    data.gallery.forEach(item=>{
+
+        gallery+=`
+            <img
+                src="${esc(item.url)}"
+                alt="${esc(item.title)}"
+                loading="lazy">
+        `;
+
+    });
+
+    const galleryContainer =
+        document.getElementById("galleryContainer");
+
+    if(galleryContainer)
+        galleryContainer.innerHTML =
+            gallery || "<p>Nenhuma imagem disponível.</p>";
+
+    let videos="";
+
+    data.videos.forEach(video=>{
+
+        if(video.enabled === false)
+            return;
+
+        videos+=`
+
+        <div class="video-card">
+
+            <video controls preload="metadata">
+
+                <source src="${esc(video.url)}">
+
+            </video>
+
+            <div class="video-info">
+
+                <h3>${esc(video.title)}</h3>
+
+                <p>${esc(video.description)}</p>
+
+            </div>
+
+        </div>`;
+
+    });
+
+    const videosContainer =
+        document.getElementById("videosContainer");
+
+    if(videosContainer)
+        videosContainer.innerHTML =
+            videos ||
+            "<p>Ainda não existem vídeos publicados.</p>";
+
+    let offers="";
+
+    data.offers.forEach(offer=>{
+
+        if(offer.enabled === false)
+            return;
+
+        offers+=`
+
+        <div class="offer">
+
+            <h3>${esc(offer.title)}</h3>
+
+            <p>${esc(offer.description)}</p>
+
+        </div>`;
+
+    });
+
+    const offersContainer =
+        document.getElementById("offersContainer");
+
+    if(offersContainer)
+        offersContainer.innerHTML =
+            offers ||
+            "<p>Nenhuma oferta ou notícia publicada.</p>";
+
+    let testimonials="";
+
+    data.testimonials.forEach(item=>{
+
+        if(item.enabled === false)
+            return;
+
+        testimonials+=`
+
+        <div class="testimonial">
+
+            <div class="stars">
+                ${"★".repeat(Number(item.rating || 5))}
+            </div>
+
+            <p>"${esc(item.comment)}"</p>
+
+            <strong>${esc(item.name)}</strong>
+
+        </div>`;
+
+    });
+
+    const testimonialsContainer =
+        document.getElementById("testimonialsContainer");
+
+    if(testimonialsContainer)
+        testimonialsContainer.innerHTML =
+            testimonials ||
+            "<p>Ainda não existem testemunhos.</p>";
+
+    const whatsapp =
+        String(data.contacts.whatsapp || "")
+        .replace(/\D/g,"");
+
+    const wa =
+        document.getElementById("whatsappButton");
+
+    if(wa){
+
+        if(whatsapp){
+
+            wa.href =
+                "https://wa.me/"+whatsapp;
+
+            wa.style.display="grid";
+
+        }else{
+
+            wa.style.display="none";
+
+        }
+    }
+}
+
+/* ==========================================================
+   RESERVAS
+========================================================== */
+
+let selectedTripId = null;
+
+function openReservation(id){
+
+    selectedTripId = id;
+
+    const trip =
+        data.trips.find(t=>t.id == id);
+
+    if(!trip)
+        return;
+
+    const select =
+        document.getElementById("reservationTrip");
+
+    if(select){
+
+        select.innerHTML =
+            `<option value="${trip.id}">
+                ${esc(trip.origin)} → ${esc(trip.destination)}
+            </option>`;
+
+    }
+
+    const people =
+        document.getElementById("reservationPeople");
+
+    if(people)
+        people.value=1;
+
+    const modal =
+        document.getElementById("reservationModal");
+
+    if(modal)
+        modal.classList.add("active");
+
+    calculateReservation();
+}
+
+function closeReservation(){
+
+    const modal =
+        document.getElementById("reservationModal");
+
+    if(modal)
+        modal.classList.remove("active");
+}
+
+function calculateReservation(){
+
+    const trip =
+        data.trips.find(t=>t.id == selectedTripId);
+
+    if(!trip)
+        return;
+
+    const peopleInput =
+        document.getElementById("reservationPeople");
+
+    const people =
+        Number(peopleInput?.value) || 1;
+
+    const total =
+        Number(trip.price || 0) * people;
+
+    const percent =
+        Number(data.payments.percent) || 30;
+
+    const deposit =
+        total*(percent/100);
+
+    const remaining =
+        total-deposit;
+
+    const totalEl =
+        document.getElementById("reservationTotal");
+
+    if(totalEl)
+        totalEl.textContent=money(total);
+
+    const depositEl =
+        document.getElementById("reservationDeposit");
+
+    if(depositEl)
+        depositEl.textContent=money(deposit);
+
+    const remainingEl =
+        document.getElementById("reservationRemaining");
+
+    if(remainingEl)
+        remainingEl.textContent=money(remaining);
+}
+
+async function submitReservation(event){
+
+    event.preventDefault();
+
+    const trip =
+        data.trips.find(t=>t.id == selectedTripId);
+
+    if(!trip)
+        return;
+
+    const people =
+        Number(
+            document.getElementById("reservationPeople")?.value
+        ) || 1;
+
+    const total =
+        Number(trip.price || 0)*people;
+
+    const percent =
+        Number(data.payments.percent)||30;
+
+    const deposit =
+        total*(percent/100);
+
+    const remaining =
+        total-deposit;
+
+    const reservation={
+
+        id:Date.now(),
+
+        name:
+            document.getElementById("reservationName").value.trim(),
+
+        phone:
+            document.getElementById("reservationPhone").value.trim(),
+
+        email:
+            document.getElementById("reservationEmail").value.trim(),
+
+        trip:
+            trip.origin+" → "+trip.destination,
+
+        tripId:trip.id,
+
+        people,
+
+        total,
+
+        deposit,
+
+        remaining,
+
+        notes:
+            document.getElementById("reservationNotes").value.trim(),
+
+        status:"Pendente",
+
+        date:new Date().toISOString()
+
+    };
+
+    data.reservations.unshift(reservation);
+
+    saveLocal();
+    renderAdmin();
+
+    let onlineSaved=false;
+
+    if(ONLINE_MODE && sb){
+
+        try{
+
+            const {error} =
+                await sb
+                .from("reservations")
+                .insert({
+
+                    id:reservation.id,
+                    name:reservation.name,
+                    phone:reservation.phone,
+                    email:reservation.email,
+                    trip_id:reservation.tripId,
+                    trip:reservation.trip,
+                    people:reservation.people,
+                    total:reservation.total,
+                    deposit:reservation.deposit,
+                    remaining:reservation.remaining,
+                    notes:reservation.notes,
+                    status:reservation.status
+
+                });
+
+            if(error){
+
+                console.error(error);
+
+            }else{
+
+                onlineSaved=true;
+
+            }
+
+        }catch(error){
+
+            console.error(error);
+
+        }
+    }
+
+    const message =
+        "Olá, quero fazer uma reserva na Binzole Viajar Verde.%0A%0A"+
+        "Nome: "+encodeURIComponent(reservation.name)+
+        "%0ATelefone: "+encodeURIComponent(reservation.phone)+
+        "%0AViagem: "+encodeURIComponent(reservation.trip)+
+        "%0APessoas: "+people+
+        "%0ATotal: "+encodeURIComponent(money(total))+
+        "%0AEntrada ("+percent+"%): "+
+        encodeURIComponent(money(deposit))+
+        "%0ARestante: "+encodeURIComponent(money(remaining))+
+        "%0AObservações: "+
+        encodeURIComponent(reservation.notes || "Nenhuma");
+
+    const whatsapp =
+        String(data.contacts.whatsapp || "")
+        .replace(/\D/g,"");
+
+    if(whatsapp){
+
+        window.open(
+            "https://wa.me/"+whatsapp+"?text="+message,
+            "_blank"
+        );
+
+    }
+
+    alert(
+        onlineSaved
+        ? "Reserva enviada com sucesso!"
+        : "Reserva registrada. A confirmação será feita pela nossa equipa."
+    );
+
+    [
+        "reservationName",
+        "reservationPhone",
+        "reservationEmail",
+        "reservationNotes"
+    ].forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value="";
+
+    });
+
+    closeReservation();
+}
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+function openAdminLogin(){
+
+    const screen =
+        document.getElementById("loginScreen");
+
+    if(screen)
+        screen.classList.add("active");
+}
+
+function closeAdminLogin(){
+
+    const screen =
+        document.getElementById("loginScreen");
+
+    if(screen)
+        screen.classList.remove("active");
+}
+
+async function adminLogin(){
+
+    const user =
+        document.getElementById("adminUser").value.trim();
+
+    const password =
+        document.getElementById("adminPassword").value;
+
+    const status =
+        document.getElementById("loginStatus");
+
+    status.innerHTML="A verificar...";
+
+    if(!ONLINE_MODE || !sb){
+
+        status.innerHTML=
+            `<div style="color:#d9534f;">
+                Supabase não está configurado.
+            </div>`;
+
+        return;
+    }
+
+    if(!user || !password){
+
+        status.innerHTML=
+            `<div style="color:#d9534f;">
+                Digite o email e a palavra-passe.
+            </div>`;
+
+        return;
+    }
+
+    try{
+
+        const {
+            data:authData,
+            error
+        } =
+        await sb.auth.signInWithPassword({
+            email:user,
+            password:password
+        });
+
+        if(error)
+            throw error;
+
+        if(!authData || !authData.session)
+            throw new Error("Sessão não criada.");
+
+        if(authData.user.id !== ADMIN_UID){
+
+            await sb.auth.signOut();
+
+            throw new Error(
+                "Esta conta não possui acesso administrativo."
+            );
+        }
+
+        sessionStorage.setItem(
+            "binzoli_admin",
+            "online"
+        );
+
+        closeAdminLogin();
+
+        const hasOnlineData =
+            await loadOnlineData();
+
+        if(!hasOnlineData){
+
+            await ensureInitialOnlineData();
+
+            await loadOnlineData();
+
+        }
+
+        await loadOnlineReservations();
+
+        openAdminPanel();
+
+    }catch(error){
+
+        console.error(error);
+
+        status.innerHTML=
+            `<div style="color:#d9534f;">
+                ${esc(
+                    error.message ||
+                    "Email ou palavra-passe incorretos."
+                )}
+            </div>`;
+    }
+}
+
+/* ==========================================================
+   LOGOUT
+========================================================== */
+
+async function adminLogout(){
+
+    if(sb){
+
+        try{
+            await sb.auth.signOut();
+        }catch(error){
+            console.error(error);
+        }
+
+    }
+
+    sessionStorage.removeItem("binzoli_admin");
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if(panel)
+        panel.classList.remove("active");
+}
+
+/* ==========================================================
+   ADMIN PANEL
+========================================================== */
+
+function openAdminPanel(){
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if(panel)
+        panel.classList.add("active");
+
+    showAdminSection("dashboard");
+}
+
+function closeAdminPanel(){
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if(panel)
+        panel.classList.remove("active");
+}
+
+function showAdminSection(name){
+
+    document
+        .querySelectorAll(".admin-section")
+        .forEach(section=>{
+            section.classList.remove("active");
+        });
+
+    const section =
+        document.getElementById("admin-"+name);
+
+    if(section)
+        section.classList.add("active");
+
+    if(name==="reservations")
+        loadOnlineReservations();
+
+    if(name==="company-documents")
+        loadAdminDocuments("company");
+
+    if(name==="registration-files")
+        loadAdminDocuments("registration");
+
+    renderAdmin();
+
+    const sidebar =
+        document.getElementById("adminSidebar");
+
+    if(sidebar)
+        sidebar.classList.remove("mobile-open");
+}
+
+/* ==========================================================
+   HOME
+========================================================== */
+
+function loadHomeForm(){
+
+    const title =
+        document.getElementById("editHeroTitle");
+
+    if(title)
+        title.value=data.home.title;
+
+    const text =
+        document.getElementById("editHeroText");
+
+    if(text)
+        text.value=data.home.text;
+
+    const button =
+        document.getElementById("editHeroButton");
+
+    if(button)
+        button.value=data.home.button;
+
+    const file =
+        document.getElementById("editHeroImageFile");
+
+    if(file)
+        file.value="";
+
+    const preview =
+        document.getElementById("heroImagePreview");
+
+    if(preview){
+        preview.innerHTML = data.home.backgroundImage
+            ? `<img src="${esc(data.home.backgroundImage)}" alt="Imagem de fundo atual" style="width:100%;height:220px;object-fit:cover;display:block;">`
+            : `<span style="padding:30px;color:#66736d;">Nenhuma imagem definida.</span>`;
+    }
+}
+
+function previewHeroImage(event){
+
+    const file = event?.target?.files?.[0];
+    const preview = document.getElementById("heroImagePreview");
+
+    if(!file || !preview)
+        return;
+
+    if(!file.type.startsWith("image/")){
+        alert("Seleciona um ficheiro de imagem válido.");
+        event.target.value="";
+        return;
+    }
+
+    const url = URL.createObjectURL(file);
+
+    preview.innerHTML =
+        `<img src="${url}" alt="Nova imagem de fundo" style="width:100%;height:220px;object-fit:cover;display:block;">`;
+}
+
+async function saveHome(){
+
+    data.home.title =
+        document.getElementById("editHeroTitle").value.trim();
+
+    data.home.text =
+        document.getElementById("editHeroText").value.trim();
+
+    data.home.button =
+        document.getElementById("editHeroButton").value.trim();
+
+    const imageInput =
+        document.getElementById("editHeroImageFile");
+
+    const imageFile =
+        imageInput?.files?.[0];
+
+    if(imageFile){
+
+        if(!ONLINE_MODE || !sb){
+            alert("Para alterar a imagem, o site precisa estar ligado ao Supabase.");
+            return;
+        }
+
+        try{
+
+            const imageUrl =
+                await uploadToStorage(imageFile,"hero");
+
+            if(!imageUrl)
+                throw new Error("Não foi possível obter o endereço da imagem.");
+
+            data.home.backgroundImage = imageUrl;
+
+        }catch(error){
+
+            console.error(error);
+            alert("Não foi possível enviar a imagem. Verifica o armazenamento do Supabase e tenta novamente.");
+            return;
+        }
+    }
+
+    const saved =
+        await saveData();
+
+    if(saved){
+        if(imageInput)
+            imageInput.value="";
+
+        alert("Página inicial atualizada e sincronizada online.");
+    }
+}
+
+/* ==========================================================
+   ABOUT
+========================================================== */
+
+function loadAboutForm(){
+
+    const fields={
+
+        editAboutTitle:data.about.title,
+        editAboutText:data.about.text,
+        editMission:data.about.mission,
+        editVision:data.about.vision,
+        editValues:data.about.values,
+        editAboutImage:data.about.image
+
+    };
+
+    Object.keys(fields).forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value=fields[id];
+
+    });
+}
+
+async function saveAbout(){
+
+    data.about.title =
+        document.getElementById("editAboutTitle").value;
+
+    data.about.text =
+        document.getElementById("editAboutText").value;
+
+    data.about.mission =
+        document.getElementById("editMission").value;
+
+    data.about.vision =
+        document.getElementById("editVision").value;
+
+    data.about.values =
+        document.getElementById("editValues").value;
+
+    data.about.image =
+        document.getElementById("editAboutImage").value;
+
+    const saved =
+        await saveData();
+
+    if(saved)
+        alert("Sobre a empresa atualizado online.");
+}
+
+/* ==========================================================
+   VIAGENS
+========================================================== */
+
+async function saveTrip(){
+
+    const editId =
+        document.getElementById("tripEditId").value;
+
+    const trip={
+
+        id:editId ? Number(editId) : Date.now(),
+
+        origin:
+            document.getElementById("tripOrigin").value.trim(),
+
+        destination:
+            document.getElementById("tripDestination").value.trim(),
+
+        date:
+            document.getElementById("tripDate").value,
+
+        time:
+            document.getElementById("tripTime").value,
+
+        price:
+            Number(document.getElementById("tripPrice").value),
+
+        seats:
+            Number(document.getElementById("tripSeats").value),
+
+        description:
+            document.getElementById("tripDescription").value.trim(),
+
+        image:
+            document.getElementById("tripImage").value.trim()
+
+    };
+
+    if(editId){
+
+        const index =
+            data.trips.findIndex(t=>t.id==editId);
+
+        if(index>=0)
+            data.trips[index]=trip;
+
+    }else{
+
+        data.trips.push(trip);
+
+    }
+
+    const saved =
+        await saveData();
+
+    if(!saved)
+        return;
+
+    [
+        "tripEditId",
+        "tripOrigin",
+        "tripDestination",
+        "tripDate",
+        "tripTime",
+        "tripPrice",
+        "tripSeats",
+        "tripDescription",
+        "tripImage"
+    ].forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value="";
+
+    });
+
+    alert("Viagem guardada online.");
+}
+
+function editTrip(id){
+
+    const trip =
+        data.trips.find(t=>t.id==id);
+
+    if(!trip)
+        return;
+
+    const fields={
+
+        tripEditId:trip.id,
+        tripOrigin:trip.origin,
+        tripDestination:trip.destination,
+        tripDate:trip.date,
+        tripTime:trip.time,
+        tripPrice:trip.price,
+        tripSeats:trip.seats,
+        tripDescription:trip.description,
+        tripImage:trip.image
+
+    };
+
+    Object.keys(fields).forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value=fields[id];
+
+    });
+
+    showAdminSection("trips");
+}
+
+async function deleteTrip(id){
+
+    if(!confirm("Eliminar esta viagem?"))
+        return;
+
+    data.trips =
+        data.trips.filter(t=>t.id!==id);
+
+    await saveData();
+}
+
+/* ==========================================================
+   GALERIA
+========================================================== */
+
+async function addGalleryImage(){
+
+    const file =
+        document.getElementById("galleryFile").files[0];
+
+    const url =
+        document.getElementById("galleryUrl").value.trim();
+
+    const title =
+        document.getElementById("galleryTitle").value.trim() ||
+        "Imagem";
+
+    let finalUrl=url;
+
+    try{
+
+        if(file)
+            finalUrl =
+                await uploadToStorage(file,"gallery");
+
+        if(!finalUrl){
+
+            alert("Escolha uma imagem ou coloque uma URL.");
+            return;
+
+        }
+
+        data.gallery.push({
+            id:Date.now(),
+            title,
+            url:finalUrl
+        });
+
+        const saved =
+            await saveData();
+
+        if(!saved)
+            return;
+
+        document.getElementById("galleryUrl").value="";
+        document.getElementById("galleryTitle").value="";
+        document.getElementById("galleryFile").value="";
+
+        alert(
+            file
+            ? "Imagem enviada para o armazenamento online e publicada."
+            : "Imagem adicionada e sincronizada."
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Não foi possível enviar a imagem:\n\n"+
+            error.message
+        );
+    }
+}
+
+async function deleteGallery(id){
+
+    if(!confirm("Eliminar esta imagem?"))
+        return;
+
+    data.gallery =
+        data.gallery.filter(x=>x.id!==id);
+
+    await saveData();
+}
+
+/* ==========================================================
+   VÍDEOS
+========================================================== */
+
+async function addVideo(){
+
+    const file =
+        document.getElementById("videoFile").files[0];
+
+    const externalUrl =
+        document.getElementById("videoUrl").value.trim();
+
+    const title =
+        document.getElementById("videoTitle").value.trim() ||
+        "Vídeo";
+
+    const description =
+        document.getElementById("videoDescription").value.trim() ||
+        "";
+
+    let finalUrl=externalUrl;
+
+    try{
+
+        if(file)
+            finalUrl =
+                await uploadToStorage(file,"videos");
+
+        if(!finalUrl){
+
+            alert("Escolha um vídeo ou coloque uma URL.");
+            return;
+
+        }
+
+        data.videos.push({
+            id:Date.now(),
+            title,
+            description,
+            url:finalUrl,
+            enabled:true
+        });
+
+        const saved =
+            await saveData();
+
+        if(!saved)
+            return;
+
+        document.getElementById("videoTitle").value="";
+        document.getElementById("videoDescription").value="";
+        document.getElementById("videoUrl").value="";
+        document.getElementById("videoFile").value="";
+
+        alert(
+            file
+            ? "Vídeo enviado para o armazenamento online e publicado."
+            : "Vídeo adicionado online."
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Não foi possível enviar o vídeo:\n\n"+
+            error.message
+        );
+    }
+}
+
+async function deleteVideo(id){
+
+    if(!confirm("Eliminar este vídeo?"))
+        return;
+
+    data.videos =
+        data.videos.filter(x=>x.id!==id);
+
+    await saveData();
+}
+
+async function toggleVideo(id){
+
+    const video =
+        data.videos.find(x=>x.id===id);
+
+    if(video){
+
+        video.enabled =
+            video.enabled===false;
+
+        await saveData();
+
+    }
+}
+
+/* ==========================================================
+   OFERTAS
+========================================================== */
+
+async function saveOffer(){
+
+    const editId =
+        document.getElementById("offerEditId").value;
+
+    const item={
+
+        id:editId ? Number(editId):Date.now(),
+
+        title:
+            document.getElementById("offerTitle").value.trim(),
+
+        description:
+            document.getElementById("offerDescription").value.trim(),
+
+        enabled:true
+
+    };
+
+    if(editId){
+
+        const index =
+            data.offers.findIndex(x=>x.id==editId);
+
+        if(index>=0)
+            data.offers[index]=item;
+
+    }else{
+
+        data.offers.push(item);
+
+    }
+
+    const saved =
+        await saveData();
+
+    if(!saved)
+        return;
+
+    [
+        "offerEditId",
+        "offerTitle",
+        "offerDescription"
+    ].forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value="";
+
+    });
+
+    alert("Oferta/notícia guardada online.");
+}
+
+async function deleteOffer(id){
+
+    data.offers =
+        data.offers.filter(x=>x.id!==id);
+
+    await saveData();
+}
+
+async function toggleOffer(id){
+
+    const item =
+        data.offers.find(x=>x.id===id);
+
+    if(item){
+
+        item.enabled =
+            item.enabled===false;
+
+        await saveData();
+
+    }
+}
+
+/* ==========================================================
+   TESTEMUNHOS
+========================================================== */
+
+async function saveTestimonial(){
+
+    const editId =
+        document.getElementById("testimonialEditId").value;
+
+    const item={
+
+        id:editId ? Number(editId):Date.now(),
+
+        name:
+            document.getElementById("testimonialName").value.trim(),
+
+        comment:
+            document.getElementById("testimonialComment").value.trim(),
+
+        rating:
+            Number(document.getElementById("testimonialRating").value),
+
+        enabled:true
+
+    };
+
+    if(editId){
+
+        const index =
+            data.testimonials.findIndex(x=>x.id==editId);
+
+        if(index>=0)
+            data.testimonials[index]=item;
+
+    }else{
+
+        data.testimonials.push(item);
+
+    }
+
+    const saved =
+        await saveData();
+
+    if(!saved)
+        return;
+
+    [
+        "testimonialEditId",
+        "testimonialName",
+        "testimonialComment"
+    ].forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value="";
+
+    });
+
+    alert("Testemunho guardado online.");
+}
+
+async function deleteTestimonial(id){
+
+    data.testimonials =
+        data.testimonials.filter(x=>x.id!==id);
+
+    await saveData();
+}
+
+/* ==========================================================
+   PAGAMENTOS
+========================================================== */
+
+async function savePaymentPercent(){
+
+    let percent =
+        Number(
+            document.getElementById("paymentPercent").value
+        );
+
+    if(percent<0)
+        percent=0;
+
+    if(percent>100)
+        percent=100;
+
+    data.payments.percent=percent;
+
+    const saved =
+        await saveData();
+
+    if(saved)
+        alert("Percentagem atualizada online.");
+}
+
+async function addPaymentMethod(){
+
+    const name =
+        document.getElementById("paymentMethodName").value.trim();
+
+    const instructions =
+        document.getElementById("paymentMethodInstructions").value.trim();
+
+    if(!name){
+
+        alert("Digite o nome do método.");
+        return;
+
+    }
+
+    data.payments.methods.push({
+
+        id:Date.now(),
+        name,
+        instructions,
+        active:true
+
+    });
+
+    const saved =
+        await saveData();
+
+    if(!saved)
+        return;
+
+    document.getElementById("paymentMethodName").value="";
+    document.getElementById("paymentMethodInstructions").value="";
+
+    alert("Método de pagamento adicionado.");
+}
+
+async function deletePaymentMethod(id){
+
+    data.payments.methods =
+        data.payments.methods.filter(x=>x.id!==id);
+
+    await saveData();
+}
+
+/* ==========================================================
+   CONTACTOS
+========================================================== */
+
+function loadContactsForm(){
+
+    const fields={
+
+        editPhone:data.contacts.phone,
+        editWhatsapp:data.contacts.whatsapp,
+        editEmail:data.contacts.email,
+        editAddress:data.contacts.address,
+        editInstagram:data.contacts.instagram,
+        editFacebook:data.contacts.facebook,
+        editTikTok:data.contacts.tiktok
+
+    };
+
+    Object.keys(fields).forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value=fields[id];
+
+    });
+}
+
+async function saveContacts(){
+
+    data.contacts.phone =
+        document.getElementById("editPhone").value.trim();
+
+    data.contacts.whatsapp =
+        document.getElementById("editWhatsapp").value.trim();
+
+    data.contacts.email =
+        document.getElementById("editEmail").value.trim();
+
+    data.contacts.address =
+        document.getElementById("editAddress").value.trim();
+
+    data.contacts.instagram =
+        document.getElementById("editInstagram").value.trim();
+
+    data.contacts.facebook =
+        document.getElementById("editFacebook").value.trim();
+
+    data.contacts.tiktok =
+        document.getElementById("editTikTok").value.trim();
+
+    const saved =
+        await saveData();
+
+    if(saved)
+        alert("Contactos guardados online com sucesso.");
+}
+
+/* ==========================================================
+   APARÊNCIA
+========================================================== */
+
+function loadAppearanceForm(){
+
+    const fields={
+
+        appearanceLogo:data.appearance.logo,
+        appearanceColor:data.appearance.color,
+        appearanceFooter:data.appearance.footer
+
+    };
+
+    Object.keys(fields).forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value=fields[id];
+
+    });
+}
+
+async function saveAppearance(){
+
+    data.appearance.logo =
+        document.getElementById("appearanceLogo").value.trim();
+
+    data.appearance.color =
+        document.getElementById("appearanceColor").value;
+
+    data.appearance.footer =
+        document.getElementById("appearanceFooter").value.trim();
+
+    document.documentElement.style.setProperty(
+        "--green",
+        data.appearance.color
+    );
+
+    const saved =
+        await saveData();
+
+    if(saved)
+        alert("Aparência guardada online.");
+}
+
+/* ==========================================================
+   CONFIGURAÇÕES
+========================================================== */
+
+function loadSettingsForm(){
+
+    const fields={
+
+        settingCompany:data.settings.company,
+        settingCurrency:data.settings.currency,
+        settingTitle:data.settings.title
+
+    };
+
+    Object.keys(fields).forEach(id=>{
+
+        const element =
+            document.getElementById(id);
+
+        if(element)
+            element.value=fields[id];
+
+    });
+}
+
+async function saveSettings(){
+
+    data.settings.company =
+        document.getElementById("settingCompany").value.trim();
+
+    data.settings.currency =
+        document.getElementById("settingCurrency").value.trim();
+
+    data.settings.title =
+        document.getElementById("settingTitle").value.trim();
+
+    document.title =
+        data.settings.title;
+
+    data.company =
+        data.settings.company;
+
+    const saved =
+        await saveData();
+
+    if(saved)
+        alert("Configurações guardadas online.");
+}
+
+/* ==========================================================
+   ADMIN RENDER
+========================================================== */
+
+function renderAdmin(){
+
+    const statTrips =
+        document.getElementById("statTrips");
+
+    if(statTrips)
+        statTrips.textContent=data.trips.length;
+
+    const statReservations =
+        document.getElementById("statReservations");
+
+    if(statReservations)
+        statReservations.textContent=data.reservations.length;
+
+    const statVideos =
+        document.getElementById("statVideos");
+
+    if(statVideos)
+        statVideos.textContent=data.videos.length;
+
+    const statGallery =
+        document.getElementById("statGallery");
+
+    if(statGallery)
+        statGallery.textContent=data.gallery.length;
+
+    const statOffers =
+        document.getElementById("statOffers");
+
+    if(statOffers)
+        statOffers.textContent=data.offers.length;
+
+    const statTestimonials =
+        document.getElementById("statTestimonials");
+
+    if(statTestimonials)
+        statTestimonials.textContent=data.testimonials.length;
+
+    /* VIAGENS */
+
+    let trips="";
+
+    data.trips.forEach(trip=>{
+
+        trips+=`
+
+        <tr>
+
+            <td>${esc(trip.origin)}</td>
+
+            <td>${esc(trip.destination)}</td>
+
+            <td>
+                ${esc(trip.date)}
+                ${esc(trip.time)}
+            </td>
+
+            <td>${money(trip.price)}</td>
+
+            <td>${esc(trip.seats)}</td>
+
+            <td>
+
+                <div class="admin-actions">
+
+                    <button
+                        class="btn btn-secondary"
+                        onclick="editTrip(${trip.id})">
+                        Editar
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="deleteTrip(${trip.id})">
+                        Eliminar
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>`;
+
+    });
+
+    const tripsTable =
+        document.getElementById("adminTripsTable");
+
+    if(tripsTable)
+        tripsTable.innerHTML=trips;
+
+    /* RESERVAS */
+
+    let reservations="";
+
+    data.reservations.forEach(item=>{
+
+        reservations+=`
+
+        <tr>
+
+            <td>${esc(item.name)}</td>
+
+            <td>${esc(item.phone)}</td>
+
+            <td>${esc(item.trip)}</td>
+
+            <td>${item.people}</td>
+
+            <td>${money(item.total)}</td>
+
+            <td>${money(item.deposit)}</td>
+
+            <td>${money(item.remaining)}</td>
+
+            <td>${esc(item.status)}</td>
+
+            <td>
+
+                <div class="admin-actions">
+
+                    <button
+                        class="btn btn-success"
+                        onclick="updateReservation(${item.id},'Confirmada')">
+                        Confirmar
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick="updateReservation(${item.id},'Cancelada')">
+                        Cancelar
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        onclick='deleteReservation(${JSON.stringify(item.id)})'>
+                        Eliminar
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>`;
+
+    });
+
+    const reservationsTable =
+        document.getElementById("adminReservationsTable");
+
+    if(reservationsTable){
+
+        reservationsTable.innerHTML =
+            reservations ||
+            `<tr>
+                <td colspan="9">
+                    Nenhuma reserva encontrada.
+                </td>
+            </tr>`;
+
+    }
+
+    /* GALERIA */
+
+    let gallery="";
+
+    data.gallery.forEach(item=>{
+
+        gallery+=`
+
+        <div class="admin-card">
+
+            <img
+                src="${esc(item.url)}"
+                alt="${esc(item.title)}">
+
+            <p style="margin:7px 0;">
+                ${esc(item.title)}
+            </p>
+
+            <button
+                class="btn btn-danger"
+                onclick="deleteGallery(${item.id})">
+                Eliminar
+            </button>
+
+        </div>`;
+
+    });
+
+    const adminGallery =
+        document.getElementById("adminGallery");
+
+    if(adminGallery)
+        adminGallery.innerHTML =
+            gallery ||
+            "<p class='empty'>Nenhuma imagem cadastrada.</p>";
+
+    /* VÍDEOS */
+
+    let videos="";
+
+    data.videos.forEach(video=>{
+
+        videos+=`
+
+        <div class="admin-card">
+
+            <video controls>
+
+                <source
+                    src="${esc(video.url)}">
+
+            </video>
+
+            <div class="video-info">
+
+                <h3>${esc(video.title)}</h3>
+
+                <p>${esc(video.description)}</p>
+
+                <p>
+                    Status:
+                    <strong>
+                        ${
+                            video.enabled===false
+                            ? "Desativado"
+                            : "Ativo"
+                        }
+                    </strong>
+                </p>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="toggleVideo(${video.id})">
+                    ${
+                        video.enabled===false
+                        ? "Ativar"
+                        : "Desativar"
+                    }
+                </button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteVideo(${video.id})">
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>`;
+
+    });
+
+    const adminVideos =
+        document.getElementById("adminVideos");
+
+    if(adminVideos)
+        adminVideos.innerHTML =
+            videos ||
+            "<p class='empty'>Nenhum vídeo cadastrado.</p>";
+
+    /* OFERTAS */
+
+    let offers="";
+
+    data.offers.forEach(item=>{
+
+        offers+=`
+
+        <div class="admin-card">
+
+            <h3>${esc(item.title)}</h3>
+
+            <p>${esc(item.description)}</p>
+
+            <p>
+                Status:
+                ${
+                    item.enabled===false
+                    ? "Desativado"
+                    : "Ativo"
+                }
+            </p>
+
+            <button
+                class="btn btn-secondary"
+                onclick="toggleOffer(${item.id})">
+                ${
+                    item.enabled===false
+                    ? "Ativar"
+                    : "Desativar"
+                }
+            </button>
+
+            <button
+                class="btn btn-danger"
+                onclick="deleteOffer(${item.id})">
+                Eliminar
+            </button>
+
+        </div>`;
+
+    });
+
+    const adminOffers =
+        document.getElementById("adminOffers");
+
+    if(adminOffers)
+        adminOffers.innerHTML =
+            offers ||
+            "<p class='empty'>Nenhuma oferta cadastrada.</p>";
+
+    /* TESTEMUNHOS */
+
+    let testimonials="";
+
+    data.testimonials.forEach(item=>{
+
+        testimonials+=`
+
+        <div class="admin-card">
+
+            <h3>${esc(item.name)}</h3>
+
+            <div class="stars">
+                ${"★".repeat(Number(item.rating || 5))}
+            </div>
+
+            <p>${esc(item.comment)}</p>
+
+            <button
+                class="btn btn-danger"
+                onclick="deleteTestimonial(${item.id})">
+                Eliminar
+            </button>
+
+        </div>`;
+
+    });
+
+    const adminTestimonials =
+        document.getElementById("adminTestimonials");
+
+    if(adminTestimonials)
+        adminTestimonials.innerHTML =
+            testimonials ||
+            "<p class='empty'>Nenhum testemunho cadastrado.</p>";
+
+    /* PAGAMENTOS */
+
+    const paymentPercent =
+        document.getElementById("paymentPercent");
+
+    if(paymentPercent)
+        paymentPercent.value=data.payments.percent;
+
+    let methods="";
+
+    data.payments.methods.forEach(item=>{
+
+        methods+=`
+
+        <div class="admin-card">
+
+            <h3>${esc(item.name)}</h3>
+
+            <p>${esc(item.instructions)}</p>
+
+            <button
+                class="btn btn-danger"
+                onclick="deletePaymentMethod(${item.id})">
+                Eliminar
+            </button>
+
+        </div>`;
+
+    });
+
+    const adminPaymentMethods =
+        document.getElementById("adminPaymentMethods");
+
+    if(adminPaymentMethods)
+        adminPaymentMethods.innerHTML =
+            methods ||
+            "<p class='empty'>Nenhum método cadastrado.</p>";
+
+    loadHomeForm();
+    loadAboutForm();
+    loadContactsForm();
+    loadAppearanceForm();
+    loadSettingsForm();
+}
+
+/* ==========================================================
+   DOCUMENTOS PRIVADOS DO ADMINISTRADOR
+========================================================== */
+
+async function loadAdminDocuments(category){
+
+    const tableId = category === "company" ? "companyDocumentsTable" : "registrationDocumentsTable";
+    const table = document.getElementById(tableId);
+    if(table) table.innerHTML = `<tr><td colspan="4">A carregar...</td></tr>`;
+
+    if(!ONLINE_MODE || !sb){
+        if(table) table.innerHTML = `<tr><td colspan="4">É necessário ter a ligação ao Supabase ativa.</td></tr>`;
+        return;
+    }
+
+    const session = await getAdminSession();
+    if(!session){
+        if(table) table.innerHTML = `<tr><td colspan="4">Inicia sessão como administrador para consultar os ficheiros.</td></tr>`;
+        return;
+    }
+
+    try{
+        const {data:files,error} = await sb
+            .from("admin_documents")
+            .select("id,category,name,description,file_path,mime_type,file_size,created_at")
+            .eq("category",category)
+            .order("created_at",{ascending:false});
+
+        if(error) throw error;
+
+        if(!files || !files.length){
+            if(table) table.innerHTML = `<tr><td colspan="4">Nenhum ficheiro guardado.</td></tr>`;
+            return;
+        }
+
+        if(table) table.innerHTML = files.map(file => `
+            <tr>
+                <td>${esc(file.name || "Ficheiro")}</td>
+                <td>${esc(file.description || "—")}</td>
+                <td>${file.created_at ? new Date(file.created_at).toLocaleDateString("pt-PT") : "—"}</td>
+                <td><div class="admin-actions">
+                    <button class="btn btn-secondary" onclick='downloadAdminDocument(${JSON.stringify(file.id)})'>Abrir / Transferir</button>
+                    <button class="btn btn-danger" onclick='deleteAdminDocument(${JSON.stringify(file.id)})'>Eliminar</button>
+                </div></td>
+            </tr>`).join("");
+
+    }catch(error){
+        console.error(error);
+        if(table) table.innerHTML = `<tr><td colspan="4">Não foi possível carregar. Confirma a configuração do Supabase.</td></tr>`;
+    }
+}
+
+async function uploadAdminDocument(category){
+
+    if(!ONLINE_MODE || !sb){ alert("A ligação ao Supabase não está ativa."); return; }
+    const session = await getAdminSession();
+    if(!session){ alert("Inicia sessão como administrador antes de guardar ficheiros."); return; }
+
+    const isCompany = category === "company";
+    const nameInput = document.getElementById(isCompany ? "companyDocumentName" : "registrationDocumentName");
+    const fileInput = document.getElementById(isCompany ? "companyDocumentFile" : "registrationDocumentFile");
+    const descriptionInput = document.getElementById(isCompany ? "companyDocumentDescription" : "registrationDocumentDescription");
+    const file = fileInput?.files?.[0];
+    const name = nameInput?.value.trim();
+    if(!name || !file){ alert("Preenche o nome e escolhe o ficheiro."); return; }
+
+    const cleanName = file.name.replace(/[^\w.\-]+/g,"_");
+    const path = category + "/" + Date.now() + "_" + cleanName;
+
+    try{
+        const {error:uploadError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).upload(path,file,{upsert:false,cacheControl:"3600"});
+        if(uploadError) throw uploadError;
+
+        const {error:insertError} = await sb.from("admin_documents").insert({
+            category,
+            name,
+            description: descriptionInput?.value.trim() || "",
+            file_path:path,
+            mime_type:file.type || "application/octet-stream",
+            file_size:file.size,
+            created_by:session.user.id
+        });
+
+        if(insertError){
+            await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).remove([path]);
+            throw insertError;
+        }
+
+        if(nameInput) nameInput.value = "";
+        if(fileInput) fileInput.value = "";
+        if(descriptionInput) descriptionInput.value = "";
+        await loadAdminDocuments(category);
+        alert(isCompany ? "Documento guardado com sucesso." : "Ficha de inscrição guardada com sucesso.");
+
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível guardar o ficheiro. Confirma se executaste o SQL de configuração no Supabase.");
+    }
+}
+
+async function downloadAdminDocument(id){
+    const session = await getAdminSession();
+    if(!session || !sb){ alert("Inicia sessão como administrador."); return; }
+    try{
+        const {data:file,error} = await sb.from("admin_documents").select("file_path,name").eq("id",id).single();
+        if(error) throw error;
+        const {data:signed,error:signedError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).createSignedUrl(file.file_path,60);
+        if(signedError) throw signedError;
+        window.open(signed.signedUrl,"_blank","noopener,noreferrer");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível abrir o ficheiro. Confirma as permissões privadas no Supabase.");
+    }
+}
+
+async function deleteAdminDocument(id){
+    if(!confirm("Tens a certeza de que queres eliminar este ficheiro? Esta ação não pode ser desfeita.")) return;
+    const session = await getAdminSession();
+    if(!session || !sb){ alert("Inicia sessão como administrador."); return; }
+    try{
+        const {data:file,error:findError} = await sb.from("admin_documents").select("id,category,file_path").eq("id",id).single();
+        if(findError) throw findError;
+        const {error:removeError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).remove([file.file_path]);
+        if(removeError) throw removeError;
+        const {error:deleteError} = await sb.from("admin_documents").delete().eq("id",id);
+        if(deleteError) throw deleteError;
+        await loadAdminDocuments(file.category);
+        alert("Ficheiro eliminado.");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível eliminar o ficheiro. Confirma as permissões no Supabase.");
+    }
+}
+
+/* ==========================================================
+   ELIMINAR RESERVA
+========================================================== */
+
+async function deleteReservation(id){
+
+    if(!confirm("Tens a certeza de que queres eliminar esta reserva? Esta ação não pode ser desfeita.")) return;
+
+    const session = await getAdminSession();
+    if(!session){
+        alert("A sessão administrativa expirou. Entra novamente.");
+        return;
+    }
+
+    if(!ONLINE_MODE || !sb){
+        alert("Não foi possível ligar ao Supabase. A reserva não foi eliminada.");
+        return;
+    }
+
+    try{
+        const {error} = await sb.from("reservations").delete().eq("id",id);
+        if(error) throw error;
+        data.reservations = data.reservations.filter(item => String(item.id) !== String(id));
+        saveLocal();
+        renderAdmin();
+        alert("Reserva eliminada com sucesso.");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível eliminar a reserva. Confirma a política de permissões da tabela reservations no Supabase.");
+    }
+}
+
+/* ==========================================================
+   ATUALIZAR RESERVA
+========================================================== */
+
+async function updateReservation(id,status){
+
+    const reservation =
+        data.reservations.find(x=>x.id==id);
+
+    if(!reservation)
+        return;
+
+    const session =
+        await getAdminSession();
+
+    if(!session){
+
+        alert(
+            "A sessão administrativa expirou. Entre novamente."
+        );
+
+        return;
+    }
+
+    reservation.status=status;
+
+    if(ONLINE_MODE && sb){
+
+        const {error} =
+            await sb
+            .from("reservations")
+            .update({
+                status:status
+            })
+            .eq("id",id);
+
+        if(error){
+
+            console.error(error);
+
+            alert(
+                "Não foi possível atualizar a reserva online."
+            );
+
+            return;
+        }
+    }
+
+    saveLocal();
+    renderAdmin();
+
+    alert("Reserva atualizada.");
+}
+
+/* ==========================================================
+   CHECK SESSION
+========================================================== */
+
+async function checkAdminSession(){
+
+    const session =
+        await getAdminSession();
+
+    if(session){
+
+        sessionStorage.setItem(
+            "binzoli_admin",
+            "online"
+        );
+
+        return true;
+    }
+
+    sessionStorage.removeItem(
+        "binzoli_admin"
+    );
+
+    return false;
+}
+
+/* ==========================================================
+   INICIALIZAÇÃO
+========================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async function(){
+
+        normalizeData();
+
+        saveLocal();
+
+        renderPublic();
+
+        renderAdmin();
+
+        await loadOnlineData();
+
+        const logged =
+            await checkAdminSession();
+
+        if(logged){
+
+            await ensureInitialOnlineData();
+
+            await loadOnlineData();
+
+            await loadOnlineReservations();
+
+            openAdminPanel();
+
+        }
+
+    }
+);
+
+/* ==========================================================
+   FECHAR MODAIS CLICANDO FORA
+========================================================== */
+
+document.addEventListener("click",function(event){
+
+    if(event.target.id==="reservationModal")
+        closeReservation();
+
+    if(event.target.id==="loginScreen")
+        closeAdminLogin();
+
+});
+
+/* ==========================================================
+   ESC PARA FECHAR
+========================================================== */
+
+document.addEventListener("keydown",function(event){
+
+    if(event.key==="Escape"){
+
+        closeReservation();
+        closeAdminLogin();
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
