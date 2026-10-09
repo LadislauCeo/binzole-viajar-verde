@@ -1589,6 +1589,14 @@ footer{
                 📅 Reservas
             </button>
 
+            <button onclick="showAdminSection('company-documents')">
+                📁 Documentos da empresa
+            </button>
+
+            <button onclick="showAdminSection('registration-files')">
+                📝 Fichas de inscrição
+            </button>
+
             <button onclick="showAdminSection('contacts')">
                 📞 Contactos
             </button>
@@ -2198,6 +2206,80 @@ footer{
 </section>
 
 <!-- ======================================================
+     DOCUMENTOS DA EMPRESA
+====================================================== -->
+
+<section class="admin-section" id="admin-company-documents">
+
+    <div class="section-title">
+        <h2>Documentos da empresa</h2>
+        <p>Guarda e consulta documentos internos da Binzole Viajar Verde.</p>
+    </div>
+
+    <div class="admin-card">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nome do documento</label>
+                <input id="companyDocumentName" type="text" placeholder="Ex.: Alvará da empresa" required>
+            </div>
+            <div class="form-group">
+                <label>Ficheiro</label>
+                <input id="companyDocumentFile" type="file" required>
+            </div>
+            <div class="form-group full">
+                <label>Descrição (opcional)</label>
+                <textarea id="companyDocumentDescription" placeholder="Descrição do documento"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="uploadAdminDocument('company')">Guardar documento</button>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead><tr><th>Documento</th><th>Descrição</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="companyDocumentsTable"><tr><td colspan="4">A carregar documentos...</td></tr></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ======================================================
+     FICHAS DE INSCRIÇÃO
+====================================================== -->
+
+<section class="admin-section" id="admin-registration-files">
+
+    <div class="section-title">
+        <h2>Fichas de inscrição</h2>
+        <p>Guarda e consulta fichas de inscrição dos viajantes.</p>
+    </div>
+
+    <div class="admin-card">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nome da ficha / inscrito</label>
+                <input id="registrationDocumentName" type="text" placeholder="Ex.: Ficha de inscrição - João" required>
+            </div>
+            <div class="form-group">
+                <label>Ficheiro da ficha</label>
+                <input id="registrationDocumentFile" type="file" required>
+            </div>
+            <div class="form-group full">
+                <label>Descrição (opcional)</label>
+                <textarea id="registrationDocumentDescription" placeholder="Notas sobre a inscrição"></textarea>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="uploadAdminDocument('registration')">Guardar ficha de inscrição</button>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead><tr><th>Ficha / Inscrito</th><th>Descrição</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="registrationDocumentsTable"><tr><td colspan="4">A carregar fichas...</td></tr></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ======================================================
      CONTACTS
 ====================================================== -->
 
@@ -2371,6 +2453,7 @@ const ADMIN_UID =
 const SITE_DATA_ID = 1;
 
 const STORAGE_BUCKET = "site-media";
+const ADMIN_DOCUMENTS_BUCKET = "company-private-files";
 
 const ONLINE_MODE =
 SUPABASE_URL.startsWith("http") &&
@@ -3819,6 +3902,12 @@ function showAdminSection(name){
     if(name==="reservations")
         loadOnlineReservations();
 
+    if(name==="company-documents")
+        loadAdminDocuments("company");
+
+    if(name==="registration-files")
+        loadAdminDocuments("registration");
+
     renderAdmin();
 
     const sidebar =
@@ -4813,6 +4902,12 @@ function renderAdmin(){
                         Cancelar
                     </button>
 
+                    <button
+                        class="btn btn-danger"
+                        onclick='deleteReservation(${JSON.stringify(item.id)})'>
+                        Eliminar
+                    </button>
+
                 </div>
 
             </td>
@@ -5066,6 +5161,172 @@ function renderAdmin(){
     loadContactsForm();
     loadAppearanceForm();
     loadSettingsForm();
+}
+
+/* ==========================================================
+   DOCUMENTOS PRIVADOS DO ADMINISTRADOR
+========================================================== */
+
+async function loadAdminDocuments(category){
+
+    const tableId = category === "company" ? "companyDocumentsTable" : "registrationDocumentsTable";
+    const table = document.getElementById(tableId);
+    if(table) table.innerHTML = `<tr><td colspan="4">A carregar...</td></tr>`;
+
+    if(!ONLINE_MODE || !sb){
+        if(table) table.innerHTML = `<tr><td colspan="4">É necessário ter a ligação ao Supabase ativa.</td></tr>`;
+        return;
+    }
+
+    const session = await getAdminSession();
+    if(!session){
+        if(table) table.innerHTML = `<tr><td colspan="4">Inicia sessão como administrador para consultar os ficheiros.</td></tr>`;
+        return;
+    }
+
+    try{
+        const {data:files,error} = await sb
+            .from("admin_documents")
+            .select("id,category,name,description,file_path,mime_type,file_size,created_at")
+            .eq("category",category)
+            .order("created_at",{ascending:false});
+
+        if(error) throw error;
+
+        if(!files || !files.length){
+            if(table) table.innerHTML = `<tr><td colspan="4">Nenhum ficheiro guardado.</td></tr>`;
+            return;
+        }
+
+        if(table) table.innerHTML = files.map(file => `
+            <tr>
+                <td>${esc(file.name || "Ficheiro")}</td>
+                <td>${esc(file.description || "—")}</td>
+                <td>${file.created_at ? new Date(file.created_at).toLocaleDateString("pt-PT") : "—"}</td>
+                <td><div class="admin-actions">
+                    <button class="btn btn-secondary" onclick='downloadAdminDocument(${JSON.stringify(file.id)})'>Abrir / Transferir</button>
+                    <button class="btn btn-danger" onclick='deleteAdminDocument(${JSON.stringify(file.id)})'>Eliminar</button>
+                </div></td>
+            </tr>`).join("");
+
+    }catch(error){
+        console.error(error);
+        if(table) table.innerHTML = `<tr><td colspan="4">Não foi possível carregar. Confirma a configuração do Supabase.</td></tr>`;
+    }
+}
+
+async function uploadAdminDocument(category){
+
+    if(!ONLINE_MODE || !sb){ alert("A ligação ao Supabase não está ativa."); return; }
+    const session = await getAdminSession();
+    if(!session){ alert("Inicia sessão como administrador antes de guardar ficheiros."); return; }
+
+    const isCompany = category === "company";
+    const nameInput = document.getElementById(isCompany ? "companyDocumentName" : "registrationDocumentName");
+    const fileInput = document.getElementById(isCompany ? "companyDocumentFile" : "registrationDocumentFile");
+    const descriptionInput = document.getElementById(isCompany ? "companyDocumentDescription" : "registrationDocumentDescription");
+    const file = fileInput?.files?.[0];
+    const name = nameInput?.value.trim();
+    if(!name || !file){ alert("Preenche o nome e escolhe o ficheiro."); return; }
+
+    const cleanName = file.name.replace(/[^\w.\-]+/g,"_");
+    const path = category + "/" + Date.now() + "_" + cleanName;
+
+    try{
+        const {error:uploadError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).upload(path,file,{upsert:false,cacheControl:"3600"});
+        if(uploadError) throw uploadError;
+
+        const {error:insertError} = await sb.from("admin_documents").insert({
+            category,
+            name,
+            description: descriptionInput?.value.trim() || "",
+            file_path:path,
+            mime_type:file.type || "application/octet-stream",
+            file_size:file.size,
+            created_by:session.user.id
+        });
+
+        if(insertError){
+            await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).remove([path]);
+            throw insertError;
+        }
+
+        if(nameInput) nameInput.value = "";
+        if(fileInput) fileInput.value = "";
+        if(descriptionInput) descriptionInput.value = "";
+        await loadAdminDocuments(category);
+        alert(isCompany ? "Documento guardado com sucesso." : "Ficha de inscrição guardada com sucesso.");
+
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível guardar o ficheiro. Confirma se executaste o SQL de configuração no Supabase.");
+    }
+}
+
+async function downloadAdminDocument(id){
+    const session = await getAdminSession();
+    if(!session || !sb){ alert("Inicia sessão como administrador."); return; }
+    try{
+        const {data:file,error} = await sb.from("admin_documents").select("file_path,name").eq("id",id).single();
+        if(error) throw error;
+        const {data:signed,error:signedError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).createSignedUrl(file.file_path,60);
+        if(signedError) throw signedError;
+        window.open(signed.signedUrl,"_blank","noopener,noreferrer");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível abrir o ficheiro. Confirma as permissões privadas no Supabase.");
+    }
+}
+
+async function deleteAdminDocument(id){
+    if(!confirm("Tens a certeza de que queres eliminar este ficheiro? Esta ação não pode ser desfeita.")) return;
+    const session = await getAdminSession();
+    if(!session || !sb){ alert("Inicia sessão como administrador."); return; }
+    try{
+        const {data:file,error:findError} = await sb.from("admin_documents").select("id,category,file_path").eq("id",id).single();
+        if(findError) throw findError;
+        const {error:removeError} = await sb.storage.from(ADMIN_DOCUMENTS_BUCKET).remove([file.file_path]);
+        if(removeError) throw removeError;
+        const {error:deleteError} = await sb.from("admin_documents").delete().eq("id",id);
+        if(deleteError) throw deleteError;
+        await loadAdminDocuments(file.category);
+        alert("Ficheiro eliminado.");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível eliminar o ficheiro. Confirma as permissões no Supabase.");
+    }
+}
+
+/* ==========================================================
+   ELIMINAR RESERVA
+========================================================== */
+
+async function deleteReservation(id){
+
+    if(!confirm("Tens a certeza de que queres eliminar esta reserva? Esta ação não pode ser desfeita.")) return;
+
+    const session = await getAdminSession();
+    if(!session){
+        alert("A sessão administrativa expirou. Entra novamente.");
+        return;
+    }
+
+    if(!ONLINE_MODE || !sb){
+        alert("Não foi possível ligar ao Supabase. A reserva não foi eliminada.");
+        return;
+    }
+
+    try{
+        const {error} = await sb.from("reservations").delete().eq("id",id);
+        if(error) throw error;
+        data.reservations = data.reservations.filter(item => String(item.id) !== String(id));
+        saveLocal();
+        renderAdmin();
+        alert("Reserva eliminada com sucesso.");
+    }catch(error){
+        console.error(error);
+        alert("Não foi possível eliminar a reserva. Confirma a política de permissões da tabela reservations no Supabase.");
+    }
 }
 
 /* ==========================================================
